@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('answer_id');
             $table->unsignedBigInteger('question_id');
-            $table->json('messages')->default('[]')->comment('Array of messages');
+            $table->json('messages');
             $table->boolean('is_correct');
             $table->timestamps();
             $table->softDeletes();

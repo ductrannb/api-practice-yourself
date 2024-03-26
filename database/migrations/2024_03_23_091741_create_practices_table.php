@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('practices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('author_id');
-            $table->json('messages')->default('[]')->comment('JSON array of messages');
+            $table->json('messages');
             $table->timestamps();
             $table->softDeletes();
         });
