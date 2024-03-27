@@ -45,7 +45,6 @@ class Controller extends BaseController
 
     public function deletedSuccess($message = '')
     {
-
         return response()->json(
             ['message' => $message],
             Response::HTTP_NO_CONTENT
