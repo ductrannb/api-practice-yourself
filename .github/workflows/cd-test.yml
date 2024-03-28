@@ -12,7 +12,7 @@ jobs:
       - name: Change direction
         shell: bash
         run:
-          echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S git config --global --add safe.directory '*' && cd ${{ secrets.SERVER_TEST_DIR }} && git checkout main && git pull && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist && php artisan migrate --force
+          echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S git config --global --add safe.directory '*' && cd ${{ secrets.SERVER_TEST_DIR }} && git checkout dev && git pull && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist && php artisan migrate --force
       - name: chown user storage folder
         shell: bash
         run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_TEST_DIR }}/storage
