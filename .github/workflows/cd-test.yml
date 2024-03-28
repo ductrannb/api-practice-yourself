@@ -16,10 +16,10 @@ jobs:
     - name: Give Permission
       shell: bash
       run:
-        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_DIR }}storage
-        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_DIR }}storage
-        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_DIR }}bootstrap/cache
-        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_DIR }}bootstrap/cache
+        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_TEST_DIR }}storage
+        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_TEST_DIR }}storage
+        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_TEST_DIR }}bootstrap/cache
+        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_TEST_DIR }}bootstrap/cache
     # - name: Install update
     #   shell: bash
     #   run:
