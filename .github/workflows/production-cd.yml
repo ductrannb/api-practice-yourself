@@ -1,0 +1,22 @@
+name: Api Practice Yourself CD - Production
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy_production:
+    runs-on: self-hosted
+
+    steps:
+    - name: Pull from remote
+      shell: bash
+      run: 
+        cd ${{ secrets.SERVER_DIR }}
+        git checkout main
+        git reset --hard
+        chmod -R 775 storage
+        chmod -R 775 bootstrap/cache
+        git pull
+        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        php artisan migrate
