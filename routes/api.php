@@ -12,3 +12,7 @@ Route::middleware('api')->group(function () {
     Route::post('me', [AuthController::class, 'me']);
 
 });
+
+Route::get('hello', function () {
+    return response()->json(['message' => 'Toi da sua text nay']);
+});
