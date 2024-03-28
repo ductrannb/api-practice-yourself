@@ -16,7 +16,6 @@ jobs:
       shell: bash
       run: 
         git checkout main
-        git reset --hard
         git pull
     - name: Install update
       shell: bash
