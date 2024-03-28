@@ -11,18 +11,13 @@ jobs:
     steps:
     - name: Change direction
       shell: bash
-      run: cd ${{ secrets.SERVER_DIR }}
-    - name: Setup git repo
-      shell: bash
-      run: 
-        git checkout main
-        git pull
-    - name: Install update
-      shell: bash
-      run:
-        chmod -R 775 storage
-        chmod -R 775 bootstrap/cache
-        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-        php artisan migrate
+      run: cd ${{ secrets.SERVER_DIR }} && git branch && git checkout main && git pull && chmod -R 775 storage && chmod -R 775 bootstrap/cache && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist && php artisan migrate 
+    # - name: Install update
+    #   shell: bash
+    #   run:
+        
+        
+        
+        
         
         
