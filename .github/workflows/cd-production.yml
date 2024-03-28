@@ -16,7 +16,8 @@ jobs:
     - name: Give Permission
       shell: bash
       run:
-        chmod -R 775 ${{ secrets.SERVER_DIR }}storage && chmod -R 775 ${{ secrets.SERVER_DIR }}bootstrap/cache
+        echo ${{ secrets.USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_DIR }}storage
+        echo ${{ secrets.USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_DIR }}bootstrap/cache
     # - name: Install update
     #   shell: bash
     #   run:
