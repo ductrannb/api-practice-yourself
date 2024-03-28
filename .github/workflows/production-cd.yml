@@ -9,14 +9,21 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Pull from remote
+    - name: Change direction
+      shell: bash
+      run: cd ${{ secrets.SERVER_DIR }}
+    - name: Setup git repo
       shell: bash
       run: 
-        cd ${{ secrets.SERVER_DIR }}
         git checkout main
         git reset --hard
+        git pull
+    - name: Install update
+      shell: bash
+      run:
         chmod -R 775 storage
         chmod -R 775 bootstrap/cache
-        git pull
         composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
         php artisan migrate
+        
+        
