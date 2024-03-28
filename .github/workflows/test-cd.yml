@@ -11,8 +11,8 @@ jobs:
     steps:
     - name: Pull code
       shell: bash
-      run: 
-        cd ${{ secrets.SERVER_TEST_DIR }} && git checkout dev && git pull && chmod -R 775 storage && chmod -R 775 bootstrap/cache && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist && php artisan migrate --force
+      run:
+        cd ${{ secrets.SERVER_TEST_DIR }} && sudo a2enmod rewrite && git config --global safe.directory ${{ secrets.SERVER_TEST_DIR }} && git checkout dev && git pull && chmod -R 775 storage && chmod -R 775 bootstrap/cache && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist && php artisan migrate --force
     # - name: Install update
     #   shell: bash
     #   run:
