@@ -9,7 +9,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S git config --global --add safe.directory '*'
       - run: git --git-dir=${{ secrets.SERVER_TEST_DIR }}/.git reset --hard
       - run: git --git-dir=${{ secrets.SERVER_TEST_DIR }}/.git checkout dev
       - run: git --git-dir=${{ secrets.SERVER_TEST_DIR }}/.git pull
