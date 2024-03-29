@@ -12,11 +12,3 @@ jobs:
       - name: Run deployment sh
         shell: bash
         run: sh ${{ secrets.SH_PATH_TEST }}
-      # - run: git --git-dir=${{ secrets.SERVER_TEST_DIR }}/.git checkout dev
-      # - run: git --git-dir=${{ secrets.SERVER_TEST_DIR }}/.git pull
-      # - run: git --git-dir=${{ secrets.SERVER_TEST_DIR }}/.git reset --hard
-      # - run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --working-dir=${{ secrets.SERVER_TEST_DIR }}
-      # - run: php ${{ secrets.SERVER_TEST_DIR }}/artisan migrate --force
-      # - run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_TEST_DIR }}
-      # - run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_TEST_DIR }}/storage
-      # - run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_DIR }}/bootstrap/cache
