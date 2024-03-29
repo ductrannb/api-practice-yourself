@@ -9,22 +9,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Change direction
-      shell: bash
-      run:
-        echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S git config --global --add safe.directory '*' && cd ${{ secrets.SERVER_DIR }} && git checkout main && git pull && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist && php artisan migrate --force
-    - name: chown user storage folder
-      shell: bash
-      run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_DIR }}/storage
-    - name: chmod storage folder
-      shell: bash
-      run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_DIR }}/storage
-    - name: chown user bootstrap/cache folder
-      shell: bash
-      run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chown www-data:www-data ${{ secrets.SERVER_DIR }}/bootstrap/cache
-    - name: chmod bootstrap/cache folder
-      shell: bash
-      run: echo ${{ secrets.SUDO_USER_PASSWORD }} | sudo -S chmod -R 775 ${{ secrets.SERVER_DIR }}/bootstrap/cache
-    # - name: Install update
-    #   shell: bash
-    #   run:
+      - name: Run deployment sh
+        shell: bash
+        run: sh ${{ secrets.SH_PATH_PRODUCTION }}
