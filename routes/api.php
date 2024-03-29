@@ -14,5 +14,5 @@ Route::middleware('api')->group(function () {
 });
 
 Route::get('hello', function () {
-    return response()->json(['message' => 'Toi da sua text nay lan thu 4']);
+    return response()->json(['message' => 'Toi da sua text nay lan thu 5']);
 });
