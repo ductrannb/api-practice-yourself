@@ -35,7 +35,7 @@ class Controller extends BaseController
         );
     }
 
-    public function createdSuccess($message = '', $data = [])
+    public function createdSuccess($message = 'Created successfully', $data = [])
     {
         return response()->json(
             ['message' => $message, 'data' => $data],
@@ -43,11 +43,19 @@ class Controller extends BaseController
         );
     }
 
-    public function deletedSuccess($message = '')
+    public function deletedSuccess($message = 'Deleted successfully')
     {
         return response()->json(
             ['message' => $message],
             Response::HTTP_NO_CONTENT
+        );
+    }
+
+    public function responseUnauthorized()
+    {
+        return response()->json(
+            ['message' => 'Unauthorized'],
+            Response::HTTP_UNAUTHORIZED
         );
     }
 }

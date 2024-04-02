@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -37,6 +38,12 @@ class Handler extends ExceptionHandler
                     ['message' => 'Token expired', 'access_token' => $token],
                     Response::HTTP_NOT_ACCEPTABLE
                 );
+            }
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'message' => $e->validator->errors()->first(),
+                    'errors' => $e->validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             return response()->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         });
