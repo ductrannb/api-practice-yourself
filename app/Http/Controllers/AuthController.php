@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ForgetPasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -12,6 +13,7 @@ use App\Repositories\OtpRepository;
 use App\Repositories\UserRepository;
 use App\Utils\Messages;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -67,7 +69,20 @@ class AuthController extends Controller
             throw ValidationException::withMessages(['otp' => Messages::OTP_INVALID_MESSAGE]);
         }
         $this->userRepository->updateWithConditions(['email' => $request->email], ['password' => $request->new_password]);
-        return $this->responseOk('Cập nhật mật khẩu mới thành công.');
+        return $this->responseOk(Messages::UPDATE_PASSWORD_SUCCESS_MESSAGE);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $checkPassword = Hash::check($request->password, auth()->user()->password);
+        if (!$checkPassword) {
+            throw ValidationException::withMessages(['password' => Messages::PASSWORD_INVALID_MESSAGE]);
+        }
+        $this->userRepository->update(auth()->id(), ['password' => $request->new_password]);
+        return $this->responseOk(Messages::UPDATE_PASSWORD_SUCCESS_MESSAGE);
     }
 
     public function me()
