@@ -23,6 +23,8 @@ class User extends Authentication implements JWTSubject
     const ROLE_ADMIN = 3;
 
     protected $guarded = [];
+    protected $hidden = ['password'];
+    protected $casts = ['password' => 'hashed'];
 
     public function getJWTIdentifier()
     {

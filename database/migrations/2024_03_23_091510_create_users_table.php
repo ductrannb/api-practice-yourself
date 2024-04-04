@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('birthday')->nullable();
             $table->unsignedTinyInteger('gender')->default(User::GENDER_UNKNOWN);
             $table->unsignedTinyInteger('role_id')->default(User::ROLE_USER);
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
