@@ -14,7 +14,7 @@ class GeminiChat extends BaseModel
     public static function boot() {
         parent::boot();
         static::creating(function ($model) {
-            if (!$model->id) {
+            if (!Str::isUlid($model->id)) {
                 $model->id = Str::uuid();
             }
         });

@@ -17,9 +17,9 @@ class Gemini
         }
     }
 
-    public function startChat(): ChatSession
+    public function startChat($chatSession = null): ChatSession
     {
-        GeminiChat::create(['parts' => []]);
+        GeminiChat::create(['id' => $chatSession, 'parts' => []]);
         $geminiChat = GeminiChat::latest('created_at')->first();
         $this->chat = new ChatSession($geminiChat->id);
         return $this->chat;
@@ -29,7 +29,7 @@ class Gemini
     {
         $chat = GeminiChat::find($chatSessionId);
         if (!$chat) {
-            return $this->startChat();
+            return $this->startChat($chatSessionId);
         }
         $this->chat = new ChatSession($chat->id, $chat->parts);
         return $this->chat;
