@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils\Messages;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
@@ -54,7 +55,7 @@ class Controller extends BaseController
     public function responseUnauthorized()
     {
         return response()->json(
-            ['message' => 'Unauthorized'],
+            ['message' => Messages::PASSWORD_INVALID_MESSAGE],
             Response::HTTP_UNAUTHORIZED
         );
     }

@@ -60,8 +60,8 @@ class AuthController extends Controller
         if (!$verifyOtp) {
             throw ValidationException::withMessages(['otp' => Messages::OTP_INVALID_MESSAGE]);
         }
-        if ($verifyOtp->count_wrong >= self::MAX_COUNT_WRONG || $verifyOtp->expired_at > now()) {
-            return $this->responseError(Messages::OTP_TIMEOUT_MESSAGE, Response::HTTP_REQUEST_TIMEOUT);
+        if ($verifyOtp->count_wrong >= self::MAX_COUNT_WRONG || $verifyOtp->expired_at < now()) {
+            return $this->responseError(Messages::OTP_TIMEOUT_MESSAGE, errorCode: Response::HTTP_REQUEST_TIMEOUT);
         }
         if ($verifyOtp->code != $request->otp) {
             $verifyOtp->count_wrong ++;

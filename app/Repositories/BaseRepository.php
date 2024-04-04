@@ -71,7 +71,7 @@ abstract class BaseRepository
     }
     public function latestOfWhere(array $conditions)
     {
-        return $this->model->where($conditions)->latest();
+        return $this->model->where($conditions)->latest()->first();
     }
 
     public function where(array $conditions)

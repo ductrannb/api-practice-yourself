@@ -24,6 +24,7 @@ class User extends Authentication implements JWTSubject
 
     protected $guarded = [];
     protected $hidden = ['password'];
+    protected $casts = ['password' => 'hashed'];
 
     public function getJWTIdentifier()
     {
