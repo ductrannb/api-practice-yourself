@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -20,3 +21,9 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
 Route::get('hello', function () {
     return response()->json(['message' => 'Toi da sua text nay lan thu 6']);
 });
+
+Route::prefix('gemini')->group(function () {
+    Route::post('text-generate', [GeminiHelper::class, 'textGenerate']);
+});
+
+Broadcast::routes();
