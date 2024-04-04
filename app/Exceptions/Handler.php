@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -44,6 +45,9 @@ class Handler extends ExceptionHandler
                     'message' => $e->validator->errors()->first(),
                     'errors' => $e->validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            if ($e instanceof MethodNotAllowedHttpException) {
+                return response()->json(['message' => 'Page not found'], Response::HTTP_METHOD_NOT_ALLOWED);
             }
             return response()->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         });
