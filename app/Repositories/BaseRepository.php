@@ -38,7 +38,16 @@ abstract class BaseRepository
         if (!$record) {
             throw new RecordsNotFoundException();
         }
-        $record->update($data);
+        $record->fill($data);
+        $record->save();
+        return $record;
+    }
+
+    public function updateWithConditions(array $conditions, $data)
+    {
+        $record = $this->firstOfWhere($conditions);
+        $record->fill($data);
+        $record->save();
         return $record;
     }
 
@@ -53,10 +62,20 @@ abstract class BaseRepository
 
     public function find($id)
     {
-        $record = $this->model->find($id);
-        if (!$record) {
-            throw new RecordsNotFoundException();
-        }
-        return $record;
+        return $this->model->find($id);
+    }
+
+    public function firstOfWhere(array $conditions)
+    {
+        return $this->model->where($conditions)->first();
+    }
+    public function latestOfWhere(array $conditions)
+    {
+        return $this->model->where($conditions)->latest()->first();
+    }
+
+    public function where(array $conditions)
+    {
+        return $this->model->where($conditions)->get();
     }
 }

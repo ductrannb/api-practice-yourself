@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils\Messages;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
@@ -35,7 +36,7 @@ class Controller extends BaseController
         );
     }
 
-    public function createdSuccess($message = '', $data = [])
+    public function createdSuccess($message = 'Created successfully', $data = [])
     {
         return response()->json(
             ['message' => $message, 'data' => $data],
@@ -43,11 +44,19 @@ class Controller extends BaseController
         );
     }
 
-    public function deletedSuccess($message = '')
+    public function deletedSuccess($message = 'Deleted successfully')
     {
         return response()->json(
             ['message' => $message],
             Response::HTTP_NO_CONTENT
+        );
+    }
+
+    public function responseUnauthorized()
+    {
+        return response()->json(
+            ['message' => Messages::PASSWORD_INVALID_MESSAGE],
+            Response::HTTP_UNAUTHORIZED
         );
     }
 }

@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('practice_questions', function (Blueprint $table) {
+        Schema::create('otps', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('practice_id');
-            $table->unsignedBigInteger('question_id');
-            $table->boolean('is_correct')->default(false);
+            $table->string('email');
+            $table->string('code', 10);
+            $table->boolean('is_used')->default(false);
+            $table->tinyInteger('count_wrong')->default(0);
+            $table->dateTime('expired_at');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('practice_questions');
+        Schema::dropIfExists('otps');
     }
 };
