@@ -18,13 +18,4 @@ class Answer extends BaseModel
     {
         return $this->belongsTo(Exam::class);
     }
-
-    public function getGuestInfoAttribute()
-    {
-        return [
-            'student_id' => $this->guest_student_id,
-            'name' => $this->guest_name,
-            'email' => $this->guest_email
-        ];
-    }
 }

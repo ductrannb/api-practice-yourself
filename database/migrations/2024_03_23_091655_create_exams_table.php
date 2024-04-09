@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code', 12)->unique();
-            $table->tinyInteger('type')->default(Exam::TYPE_ASSESSMENT);
             $table->unsignedBigInteger('author_id');
             $table->timestamps();
             $table->softDeletes();

@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('practices', function (Blueprint $table) {
+        Schema::create('course_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('author_id');
-            $table->json('messages');
+            $table->unsignedBigInteger('course_id');
+            $table->unsignedBigInteger('user_id');
+            $table->uuid('gemini_chat_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('practices');
+        Schema::dropIfExists('course_user');
     }
 };

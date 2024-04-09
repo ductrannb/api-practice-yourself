@@ -15,10 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('exam_id');
             $table->unsignedBigInteger('author_id')->nullable();
-            $table->string('guest_student_id')->nullable();
-            $table->string('guest_name')->nullable();
-            $table->string('guest_email')->nullable();
-            $table->string('code', 12)->unique();
             $table->unsignedTinyInteger('score')->default(0);
             $table->timestamps();
             $table->softDeletes();
