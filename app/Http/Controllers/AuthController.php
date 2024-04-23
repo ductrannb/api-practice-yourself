@@ -46,9 +46,13 @@ class AuthController extends Controller
     public function requestForgetPassword(RequestForgetPasswordRequest $request)
     {
         $user = $this->userRepository->firstOfWhere(['email' => $request->email]);
-        $otp = rand(100000, 999999);
-        dispatch(new SendMailForgetPassword($user, $otp));
+        dispatch(new SendMailForgetPassword($user, $this->getOtp()));
         return $this->responseOk(Messages::OTP_SEND_MESSAGE);
+    }
+
+    public function getOtp() : int
+    {
+        return rand(100000, 999999);
     }
 
     /**
