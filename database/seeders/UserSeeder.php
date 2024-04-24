@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => bcrypt('123123'),
             'name' => 'Admin',
+            'avatar' => 'https://cdn.thoitiet247.edu.vn/wp-content/uploads/2024/03/avatar-xam-1.jpg',
             'role_id' => User::ROLE_ADMIN
         ]);
     }
