@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [AuthController::class, 'register'])->name('register');
-Route::post('forget-password/request', [AuthController::class, 'requestForgetPassword'])->name('request-forget-password');
+Route::post('send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('forget-password');
 
 Route::middleware(['auth.custom', 'api'])->group(function () {

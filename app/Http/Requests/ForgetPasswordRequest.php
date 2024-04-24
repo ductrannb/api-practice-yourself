@@ -23,8 +23,16 @@ class ForgetPasswordRequest extends BaseRequest
     {
         return [
             'email' => 'required|email|max:255',
+            'new_password' => 'required|string|confirmed|max:255',
             'otp' => 'required|numeric|digits:6',
-            'new_password' => 'required|string|confirmed|max:255'
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'new_password' => 'mật khẩu mới',
+            'new_password_confirmation' => 'xác nhận mật khẩu mới',
         ];
     }
 }
