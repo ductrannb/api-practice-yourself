@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -16,6 +16,12 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
     Route::post('change-password', [AuthController::class, 'changePassword'])->name('auth-change-password');
 });
 
+Route::middleware(['admin'])->group(function () {
+    Route::apiResources([
+        'users' => UserController::class,
+    ]);
+});
+
 Route::get('hello', function () {
-    return response()->json(['message' => 'Toi da sua text nay lan thu 6']);
+    return response()->json(['message' => 'Hello world']);
 });

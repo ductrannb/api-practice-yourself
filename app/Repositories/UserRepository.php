@@ -20,4 +20,11 @@ class UserRepository extends BaseRepository
     {
         return $this->create($data);
     }
+
+    public function getList($keyword = null)
+    {
+        return $this->model->when($keyword != null, function ($query) use ($keyword) {
+            return $query->where('name', 'LIKE', '%' . $keyword . '%');
+        });
+    }
 }

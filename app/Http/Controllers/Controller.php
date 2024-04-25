@@ -12,6 +12,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    protected $repository;
+
     public function response($message = '', $data = [], $status = 200)
     {
         return response()->json(
