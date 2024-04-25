@@ -15,14 +15,13 @@ class UserRequest extends BaseRequest
      */
     public function rules(): array
     {
-
         return [
             'name' => 'required|string|max:255',
             'email' => [
                 'required', 'string', 'email', 'max:255',
                 new CustomRuleUnique('users', id: $this->route('user'))
             ],
-            'password' => 'required|string|min:6',
+            'password' => [Rule::requiredIf($this->route()->getName() === 'users.create'), 'string','min:6'],
             'role_id' => ['required', Rule::in([User::ROLE_USER, User::ROLE_TEACHER])],
             'phone' => 'nullable|string|min:10|max:12',
         ];

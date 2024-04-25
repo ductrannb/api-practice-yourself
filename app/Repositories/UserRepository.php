@@ -21,10 +21,16 @@ class UserRepository extends BaseRepository
         return $this->create($data);
     }
 
-    public function getList($keyword = null)
+    public function getList($role_id, $keyword = null)
     {
-        return $this->model->when($keyword != null, function ($query) use ($keyword) {
-            return $query->where('name', 'LIKE', '%' . $keyword . '%');
-        });
+        return $this->model
+            ->where('role_id', '<>', User::ROLE_ADMIN)
+            ->where('role_id', $role_id)
+            ->when($keyword != null, function ($query) use ($keyword) {
+                return $query->where('name', 'LIKE', '%' . $keyword . '%');
+            })
+            ->latest()
+            ->orderByDesc('id')
+            ->paginate(10);
     }
 }

@@ -12,7 +12,7 @@ class Messages
     const PASSWORD_INVALID_MESSAGE = 'Mật khẩu không chính xác';
     const REGISTER_SUCCESS_MESSAGE = 'Đăng ký thành công';
 
-    const USER_CREATE_SUCCESS_MESSAGE = 'Tạo người dùng thành công';
-    const USER_UPDATE_SUCCESS_MESSAGE = 'Cập nhật người dùng thành công';
-    const USER_DELETE_SUCCESS_MESSAGE = 'Xóa người dùng thành công';
+    const USER_CREATE_SUCCESS_MESSAGE = 'Tạo thành công';
+    const USER_UPDATE_SUCCESS_MESSAGE = 'Cập nhật thành công';
+    const USER_DELETE_SUCCESS_MESSAGE = 'Xóa thành công';
 }

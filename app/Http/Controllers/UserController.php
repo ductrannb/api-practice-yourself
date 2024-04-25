@@ -20,7 +20,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->responseOk(data: UserResource::collection($this->repository->getList($request->keyword)));
+        $rs = $this->repository->getList($request->role, $request->keyword);
+        return $this->responsePaginate($rs);
     }
 
     /**
