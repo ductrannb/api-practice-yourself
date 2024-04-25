@@ -26,6 +26,18 @@ class User extends Authentication implements JWTSubject
     protected $hidden = ['password'];
     protected $casts = ['password' => 'hashed'];
 
+    public function coursesAssigned()
+    {
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id')
+            ->where('type', CourseUser::TYPE_TEACHER);
+    }
+
+    public function coursesBought()
+    {
+        return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id')
+            ->where('type', CourseUser::TYPE_USER);
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
 Route::middleware(['admin'])->group(function () {
     Route::apiResources([
         'users' => UserController::class,
+        'courses' => CourseController::class,
     ]);
 });
 

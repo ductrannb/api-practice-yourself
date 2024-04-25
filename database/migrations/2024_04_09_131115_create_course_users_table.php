@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('course_id');
             $table->unsignedBigInteger('user_id');
             $table->uuid('gemini_chat_id')->nullable();
+            $table->tinyInteger('type');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -30,7 +30,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $this->repository->create($request->validated());
-        return $this->responseOk(Messages::USER_CREATE_SUCCESS_MESSAGE);
+        return $this->responseOk(Messages::CREATE_SUCCESS_MESSAGE);
     }
 
     /**
@@ -47,7 +47,7 @@ class UserController extends Controller
     public function update(UserRequest $request, string $id)
     {
         $this->repository->update($id, $request->validated());
-        return $this->responseOk(Messages::USER_UPDATE_SUCCESS_MESSAGE);
+        return $this->responseOk(Messages::UPDATE_SUCCESS_MESSAGE);
     }
 
     /**
@@ -56,6 +56,6 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $this->repository->delete($id);
-        return $this->responseOk(Messages::USER_DELETE_SUCCESS_MESSAGE);
+        return $this->responseOk(Messages::DELETE_SUCCESS_MESSAGE);
     }
 }
