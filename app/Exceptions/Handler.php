@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
@@ -47,8 +48,12 @@ class Handler extends ExceptionHandler
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($e instanceof MethodNotAllowedHttpException) {
-                return response()->json(['message' => 'Page not found'], Response::HTTP_METHOD_NOT_ALLOWED);
+                return response()->json(['message' => 'Method not allowed'], Response::HTTP_METHOD_NOT_ALLOWED);
             }
+            if ($e->getPrevious() instanceof RecordsNotFoundException) {
+                return response()->json(['message' => 'Record not found'], Response::HTTP_NOT_ACCEPTABLE);
+            }
+            info($e);
             return response()->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         });
     }
