@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\LessonController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,9 @@ Route::middleware(['admin'])->group(function () {
 
 Route::middleware(['teacher'])->group(function () {
     Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+    Route::apiResources([
+        'lessons' => LessonController::class,
+    ]);
 });
 
 Route::get('hello', function () {
