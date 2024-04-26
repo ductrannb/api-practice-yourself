@@ -44,7 +44,9 @@ class CourseController extends Controller
         $data = Arr::add(Arr::except($request->all(), ['image', 'teachers']), 'image', $url);
         DB::transaction(function () use ($data, $request) {
             $course = $this->repository->create($data);
-            $this->createCourseUser($course, $request->teachers);
+            if ($request->teachers) {
+                $this->createCourseUser($course, $request->teachers);
+            }
         });
         return $this->responseOk(Messages::CREATE_SUCCESS_MESSAGE);
     }
@@ -71,7 +73,9 @@ class CourseController extends Controller
         DB::transaction(function () use ($id, $data, $request) {
             $course = $this->repository->update($id, $data);
             $course->assigned()->forceDelete();
-            $this->createCourseUser($course, $request->teachers);
+            if ($request->teachers) {
+                $this->createCourseUser($course, $request->teachers);
+            }
         });
         return $this->responseOk(Messages::UPDATE_SUCCESS_MESSAGE);
     }
@@ -87,7 +91,7 @@ class CourseController extends Controller
         return $this->responseOk(Messages::DELETE_SUCCESS_MESSAGE);
     }
 
-    private function createCourseUser(Course $course, array $teachers) : void
+    private function createCourseUser(Course $course, array $teachers = []) : void
     {
         collect($teachers)->map(function ($teacherId) use ($course) {
             $this->courseUserRepository->create([
