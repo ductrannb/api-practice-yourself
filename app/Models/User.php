@@ -26,6 +26,11 @@ class User extends Authentication implements JWTSubject
     protected $hidden = ['password'];
     protected $casts = ['password' => 'hashed'];
 
+    public function isRole($roleId) : bool
+    {
+        return $this->role_id === $roleId;
+    }
+
     public function coursesAssigned()
     {
         return $this->belongsToMany(Course::class, 'course_user', 'user_id', 'course_id')

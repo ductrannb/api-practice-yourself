@@ -60,9 +60,9 @@ abstract class BaseRepository
         return $record->delete();
     }
 
-    public function find($id)
+    public function find($id, array $relations = [])
     {
-        return $this->model->find($id);
+        return $this->model->with($relations)->find($id);
     }
 
     public function firstOfWhere(array $conditions)

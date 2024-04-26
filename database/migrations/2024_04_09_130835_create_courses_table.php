@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('image', 500);
             $table->unsignedInteger('price');
+            $table->unsignedInteger('sold')->default(0);
+            $table->text('short_description');
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

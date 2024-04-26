@@ -20,8 +20,13 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
 Route::middleware(['admin'])->group(function () {
     Route::apiResources([
         'users' => UserController::class,
-        'courses' => CourseController::class,
     ]);
+
+    Route::apiResource('courses', CourseController::class)->except('index');
+});
+
+Route::middleware(['teacher'])->group(function () {
+    Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
 });
 
 Route::get('hello', function () {

@@ -16,14 +16,14 @@ class Controller extends BaseController
 
     protected $repository;
 
-    public function responsePaginate(LengthAwarePaginator $paginator)
+    public function responsePaginate(LengthAwarePaginator $paginator, $resourceClass)
     {
         return response()->json([
             'per_page' => $paginator->perPage(),
             'current_page' => $paginator->currentPage(),
             'last_page' => $paginator->lastPage(),
             'total' => $paginator->total(),
-            'data' => UserResource::collection($paginator->items())
+            'data' => $resourceClass::collection($paginator->items())
         ]);
     }
 

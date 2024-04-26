@@ -21,7 +21,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $rs = $this->repository->getList($request->role, $request->keyword);
-        return $this->responsePaginate($rs);
+        return $this->responsePaginate($rs, UserResource::class);
     }
 
     /**
