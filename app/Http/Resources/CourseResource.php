@@ -24,7 +24,6 @@ class CourseResource extends JsonResource
             'count_lesson' => $this->lessons->count(),
             'count_question' => 0,
             'teachers' => UserResource::collection($this->teachers),
-            'short_description' => $this->short_description,
             'description' => $this->description,
             'created_at' => $this->created_at
         ];

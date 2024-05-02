@@ -43,7 +43,7 @@ class CourseController extends Controller
     public function store(CourseRequest $request)
     {
         $url = $this->storeFile($request->image, Constants::COURSES_PATH);
-        $data = Arr::add(Arr::except($request->all(), ['image', 'teachers']), 'image', $url);
+        $data = Arr::add(Arr::except($request->validated(), ['image', 'teachers']), 'image', $url);
         DB::transaction(function () use ($data, $request) {
             $course = $this->repository->create($data);
             if ($request->teachers) {
