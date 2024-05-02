@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Symfony\Component\Console\Question\ChoiceQuestion;
+
 class Question extends BaseModel
 {
     const LEVEL_EASY = 1;
@@ -15,6 +17,11 @@ class Question extends BaseModel
 
     public function choices()
     {
-        return $this->hasMany(QuestionChoice::class);
+        return $this->hasMany(QuestionChoice::class)->orderBy('id');
+    }
+
+    public function correctChoices()
+    {
+        return $this->hasMany(QuestionChoice::class)->where('is_correct', true);
     }
 }
