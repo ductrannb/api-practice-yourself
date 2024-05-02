@@ -23,11 +23,12 @@ Route::middleware(['admin'])->group(function () {
         'users' => UserController::class,
     ]);
 
-    Route::apiResource('courses', CourseController::class)->except('index');
+    Route::apiResource('courses', CourseController::class)->except(['index', 'show']);
 });
 
 Route::middleware(['teacher'])->group(function () {
     Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+    Route::get('courses/{course}', [CourseController::class, 'show'])->name('courses.show');
     Route::apiResources([
         'lessons' => LessonController::class,
     ]);

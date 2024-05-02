@@ -56,7 +56,11 @@ class CourseController extends Controller
      */
     public function show(string $id)
     {
-        return $this->responseOk(data: new CourseResource($this->repository->find($id)));
+        $course = $this->repository->find($id, ['teachers', 'lessons']);
+        $data = (new CourseResource($course))->toResponse(app('request'))->getData();
+        $data->data->lessons = $this->responsePaginate($course->lessons, 'App\Http\Resources\LessonResource')->getData()->data;
+        dd($data);
+        return $this->responseOk(data: $data);
     }
 
     /**

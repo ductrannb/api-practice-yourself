@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\Otp;
+use App\Models\Lesson;
 
 class LessonRepository extends BaseRepository
 {
-    public function __construct(Otp $model)
+    public function __construct(Lesson $model)
     {
         $this->model = $model;
     }
