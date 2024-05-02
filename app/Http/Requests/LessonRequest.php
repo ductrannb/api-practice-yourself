@@ -13,9 +13,13 @@ class LessonRequest extends BaseRequest
      */
     public function rules(): array
     {
+        if ($this->method() === 'POST') {
+            return [
+                'course_id' => 'required|integer|exists:courses,id',
+            ];
+        }
         return [
-            'name' => 'required|string|max:255',
-            'course_id' => 'required|integer|exists:courses',
+            'name' => 'required|string|max:255'
         ];
     }
 

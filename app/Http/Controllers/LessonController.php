@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LessonRequest;
 use App\Http\Resources\LessonResource;
 use App\Models\CourseUser;
+use App\Models\User;
 use App\Repositories\LessonRepository;
 use App\Utils\Messages;
 use Illuminate\Database\RecordsNotFoundException;
@@ -75,8 +76,20 @@ class LessonController extends Controller
         return $this->responseOk(Messages::DELETE_SUCCESS_MESSAGE);
     }
 
+    public function getName($id)
+    {
+        $lesson = $this->repository->find($id, ['course']);
+        return $this->responseOk(data: [
+            'name' => $lesson->name,
+            'course_name' => $lesson->course->name,
+        ]);
+    }
+
     private function isAssigned($course_id) : bool
     {
+        if (auth()->user()->isRole(User::ROLE_ADMIN)) {
+            return true;
+        }
         return (bool)CourseUser::where(['user_id' => auth()->id(), 'course_id' => $course_id])->first();
     }
 }

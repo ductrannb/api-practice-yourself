@@ -18,7 +18,6 @@ class CourseRequest extends BaseRequest
             'name' => 'required|string|max:255',
             'price' => 'required|integer|min:0',
             'image' => [$this->method() == 'POST' ? 'required' : 'nullable', 'image', 'max:2048'],
-            'short_description' => 'required|string',
             'description' => 'nullable|string',
             'teachers' => 'nullable|array',
             'teachers.*' => 'required|exists:users,id,role_id,' . User::ROLE_TEACHER,
@@ -32,8 +31,7 @@ class CourseRequest extends BaseRequest
             'price' => 'giá',
             'image' => 'hình ảnh',
             'teachers' => 'giáo viên',
-            'short_description' => 'mô tả ngắn',
-            'description' => 'mô tả chi tiết'
+            'description' => 'mô tả'
         ];
     }
 }

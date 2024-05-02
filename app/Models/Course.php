@@ -14,7 +14,7 @@ class Course extends BaseModel
 
     public function lessons()
     {
-        return $this->hasMany(Lesson::class);
+        return $this->hasMany(Lesson::class)->latest()->orderByDesc('id');
     }
 
     public function assigned()

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Collection;
 
 class Controller extends BaseController
 {
@@ -16,8 +17,17 @@ class Controller extends BaseController
 
     protected $repository;
 
-    public function responsePaginate(LengthAwarePaginator $paginator, $resourceClass)
+    public function responsePaginate(LengthAwarePaginator $paginator, $resourceClass, bool $onlyData = false)
     {
+        if ($onlyData) {
+            return [
+                'per_page' => $paginator->perPage(),
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'total' => $paginator->total(),
+                'data' => $resourceClass::collection($paginator->items())
+            ];
+        }
         return response()->json([
             'per_page' => $paginator->perPage(),
             'current_page' => $paginator->currentPage(),
@@ -72,6 +82,13 @@ class Controller extends BaseController
         return response()->json(
             ['message' => Messages::PASSWORD_INVALID_MESSAGE],
             Response::HTTP_UNAUTHORIZED
+        );
+    }
+
+    protected function collectPaginate(Collection $items, $currentPage = null, $perPage = 10) : LengthAwarePaginator
+    {
+        return new LengthAwarePaginator(
+            $items->forPage($currentPage ?: 1, $perPage), $items->count(), $perPage, $currentPage ?: 1
         );
     }
 }

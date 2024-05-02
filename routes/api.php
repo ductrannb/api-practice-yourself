@@ -27,8 +27,15 @@ Route::middleware(['admin'])->group(function () {
 });
 
 Route::middleware(['teacher'])->group(function () {
-    Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
-    Route::get('courses/{course}', [CourseController::class, 'show'])->name('courses.show');
+    Route::prefix('courses')->group(function () {
+        Route::get('', [CourseController::class, 'index'])->name('courses.index');
+        Route::get('/{course}', [CourseController::class, 'show'])->name('courses.show');
+        Route::get('/get-name/{id}', [CourseController::class, 'getName'])->name('courses.get-name');
+    });
+
+    Route::prefix('lessons')->group(function () {
+        Route::get('get-name/{id}', [LessonController::class, 'getName'])->name('lessons.get-name');
+    });
     Route::apiResources([
         'lessons' => LessonController::class,
     ]);

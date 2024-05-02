@@ -21,7 +21,7 @@ class CourseResource extends JsonResource
             'price' => $this->price,
             'image' => $this->image_url,
             'sold' => $this->sold,
-            'count_lesson' => 0,
+            'count_lesson' => $this->lessons->count(),
             'count_question' => 0,
             'teachers' => UserResource::collection($this->teachers),
             'short_description' => $this->short_description,
