@@ -12,6 +12,11 @@ class Course extends BaseModel
             ->where('type', CourseUser::TYPE_TEACHER);
     }
 
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class)->latest()->orderByDesc('id');
+    }
+
     public function assigned()
     {
         return $this->hasMany(CourseUser::class, 'course_id')->where('type', CourseUser::TYPE_TEACHER);

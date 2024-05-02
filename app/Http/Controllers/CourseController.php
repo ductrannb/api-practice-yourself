@@ -12,8 +12,10 @@ use App\Utils\Constants;
 use App\Utils\Messages;
 use App\Utils\Uploader;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
@@ -54,9 +56,23 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        return $this->responseOk(data: new CourseResource($this->repository->find($id)));
+        $course = $this->repository->find($id, ['teachers', 'lessons', 'lessons.author']);
+        $data = (new CourseResource($course))->toResponse(app('request'))->getData();
+
+        // Search with collection
+        $lessons = $course->lessons->filter(function ($item) use($request) {
+            $keyword = Str::lower($request->keyword);
+            return preg_match("/$keyword/", Str::lower($item['name']));
+        });
+
+        $data->data->lessons = $this->responsePaginate(
+            $this->collectPaginate($lessons, $request->page),
+            'App\Http\Resources\LessonResource',
+            true
+        );
+        return $this->responseOk(data: $data->data);
     }
 
     /**
@@ -89,6 +105,11 @@ class CourseController extends Controller
         $course->assigned()->delete();
         $course->delete();
         return $this->responseOk(Messages::DELETE_SUCCESS_MESSAGE);
+    }
+
+    public function getName($id)
+    {
+        return $this->responseOk(data: ['name' => $this->repository->find($id)->name]);
     }
 
     private function createCourseUser(Course $course, array $teachers = []) : void
