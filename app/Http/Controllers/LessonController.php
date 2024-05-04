@@ -80,7 +80,7 @@ class LessonController extends Controller
     {
         $lesson = $this->repository->find($id, ['course']);
         return $this->responseOk(data: [
-            'name' => $lesson->name,
+            'lesson_name' => $lesson->name,
             'course_name' => $lesson->course->name,
         ]);
     }

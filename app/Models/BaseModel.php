@@ -12,4 +12,12 @@ class BaseModel extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+
+    protected static function booted()
+    {
+//        static::created(function ($model) {
+//            $model->created_at = now();
+//            $model->updated_at = now();
+//        });
+    }
 }

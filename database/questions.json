@@ -1,0 +1,74 @@
+[
+    {
+        "user_id": 1,
+        "lesson_id": 1,
+        "content": "<h1>&nbsp;</h1><p>Cho&nbsp;<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>∫</mo><mfrac><mn>1</mn><msup><mn>2</mn><mi>x</mi></msup></mfrac><mi>d</mi><mi>x</mi><mo>=</mo><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>+</mo><mi>C</mi></math>. Khẳng định nào dưới đây đúng?</p>",
+        "level": 1,
+        "choices": [
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>F</mi><mo>'</mo><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mo>-</mo><mfrac><mn>1</mn><msup><mn>2</mn><mi>x</mi></msup></mfrac></math></p>",
+                "is_correct": 0
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>F</mi><mo>'</mo><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msup><mn>2</mn><mrow><mo>-</mo><mi>x</mi></mrow></msup></math></p>",
+                "is_correct": 1
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>F</mi><mo>'</mo><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mo>-</mo><mfrac><mn>1</mn><mrow><msup><mn>2</mn><mi>x</mi></msup><mi>ln</mi><mn>2</mn></mrow></mfrac></math></p>",
+                "is_correct": 0
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>F</mi><mo>'</mo><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>ln</mi><mn>2</mn></mrow><msup><mn>2</mn><mi>x</mi></msup></mfrac></math></p>",
+                "is_correct": 0
+            }
+        ]
+    },
+    {
+        "user_id": 1,
+        "lesson_id": 1,
+        "content": "<h1>&nbsp;</h1><p>Cho hàm số&nbsp;<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>y</mi><mo>=</mo><mi>a</mi><msup><mi>x</mi><mn>4</mn></msup><mo>+</mo><mi>b</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>c</mi></math>&nbsp;có đồ thị như hình vẽ. Giá trị cực tiểu của hàm số đã cho là</p><figure class=\"image\"><img src=\"https://i.ibb.co/1fxxP3z/a.png\"></figure>",
+        "level": 1,
+        "choices": [
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mn>1</mn></math></p>",
+                "is_correct": 0
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mn>1</mn></math></p>",
+                "is_correct": 0
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mn>4</mn></math></p>",
+                "is_correct": 1
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mo>-</mo><mn>3</mn></math></p>",
+                "is_correct": 0
+            }
+        ]
+    },
+    {
+        "user_id": 1,
+        "lesson_id": 1,
+        "content": "<h1>&nbsp;</h1><p>Đường tiệm cận đứng của đồ thị hàm số&nbsp;<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>y</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>x</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>x</mi><mo>-</mo><mn>3</mn></mrow></mfrac></math>&nbsp;là</p>",
+        "level": 1,
+        "choices": [
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>=</mo><mo>-</mo><mn>2</mn></math></p>",
+                "is_correct": 0
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>=</mo><mo>-</mo><mn>3</mn></math></p>",
+                "is_correct": 0
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>=</mo><mn>3</mn></math></p>",
+                "is_correct": 1
+            },
+            {
+                "content": "<h1>&nbsp;</h1><p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>x</mi><mo>=</mo><mn>2</mn></math></p>",
+                "is_correct": 0
+            }
+        ]
+    }
+]

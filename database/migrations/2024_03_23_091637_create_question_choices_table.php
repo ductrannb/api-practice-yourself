@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('question_choices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('question_id');
-            $table->string('code', 12)->unique();
-            $table->text('content');
-            $table->string('image')->nullable();
+            $table->longText('content');
             $table->boolean('is_correct')->default(false);
             $table->timestamps();
             $table->softDeletes();

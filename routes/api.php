@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,7 @@ Route::middleware(['teacher'])->group(function () {
     });
     Route::apiResources([
         'lessons' => LessonController::class,
+        'questions' => QuestionController::class,
     ]);
 });
 

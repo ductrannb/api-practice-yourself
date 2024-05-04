@@ -15,6 +15,7 @@ class LessonRequest extends BaseRequest
     {
         if ($this->method() === 'POST') {
             return [
+                'name' => 'required|string|max:255',
                 'course_id' => 'required|integer|exists:courses,id',
             ];
         }
