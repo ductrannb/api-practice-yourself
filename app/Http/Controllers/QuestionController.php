@@ -37,7 +37,7 @@ class QuestionController extends Controller
     {
         $data = Arr::add($request->validated(), 'user_id', auth()->id());
         DB::transaction(function () use ($data) {
-            $question = $this->repository->create(Arr::only($data, ['content', 'level', 'lesson_id', 'user_id']));
+            $question = $this->repository->create(Arr::except($data, ['choices']));
             $data['choices'] = collect($data['choices'])->map(function ($choice) use ($question) {
                 return array_merge(
                     $choice,
@@ -54,7 +54,9 @@ class QuestionController extends Controller
      */
     public function show(string $id)
     {
-        return $this->responseOk(data: new QuestionResource($this->repository->find($id, ['choices', 'correctChoices'])));
+        return $this->responseOk(
+            data: new QuestionResource($this->repository->find($id, ['choices', 'correctChoices', 'author']))
+        );
     }
 
     /**
@@ -65,7 +67,7 @@ class QuestionController extends Controller
         $data = $request->validated();
         DB::transaction(function () use ($data, $id) {
             $question = $this->repository->find($id, ['choices']);
-            $this->repository->update($id, Arr::only($data, ['content', 'level']));
+            $this->repository->update($id, Arr::only($data, ['content', 'level', 'solution']));
             $question->choices->map(function ($choice, $index) use ($data) {
                 $this->questionChoiceRepository->update($choice->id, $data['choices'][$index]);
             });

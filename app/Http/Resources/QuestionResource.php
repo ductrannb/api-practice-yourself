@@ -20,6 +20,9 @@ class QuestionResource extends JsonResource
             'level' => $this->level,
             'choices' => QuestionChoiceResource::collection($this->choices),
             'correct_choice' => new QuestionChoiceResource($this->correctChoices->first()) ?? null,
+            'solution' => $this->solution ?: '',
+            'author' => new AuthorResource($this->author),
+            'lesson_id' => $this->lesson_id,
         ];
     }
 }

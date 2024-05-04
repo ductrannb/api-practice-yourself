@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('lesson_id');
             $table->longText('content');
+            $table->longText('solution')->nullable();
             $table->unsignedTinyInteger('level')->default(Question::LEVEL_EASY);
             $table->timestamps();
             $table->softDeletes();

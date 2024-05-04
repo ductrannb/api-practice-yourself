@@ -18,10 +18,20 @@ class QuestionRequest extends BaseRequest
             'choices.*.is_correct' => 'required|boolean',
             'level' => ['required', Rule::in([Question::LEVEL_EASY, Question::LEVEL_MEDIUM, Question::LEVEL_HARD])],
             'lesson_id' => 'required|exists:lessons,id',
+            'solution' => 'nullable|string',
         ];
         if (!$this->isMethod('post')) {
             return Arr::except($rules, ['lesson_id']);
         }
         return $rules;
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'content' => 'nội dung câu hỏi',
+            'level' => 'mức độ',
+            'choices' => 'các đáp án'
+        ];
     }
 }

@@ -24,4 +24,8 @@ class Question extends BaseModel
     {
         return $this->hasMany(QuestionChoice::class)->where('is_correct', true);
     }
+
+    public function author() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

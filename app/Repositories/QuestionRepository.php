@@ -25,7 +25,7 @@ class QuestionRepository extends BaseRepository
             ->when($level != null, function ($query) use ($level) {
                 return $query->where('level', $level);
             })
-            ->with(['choices', 'correctChoices'])
+            ->with(['choices', 'correctChoices', 'author'])
             ->paginate(10);
     }
 }
