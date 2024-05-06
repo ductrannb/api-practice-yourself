@@ -17,8 +17,11 @@ class CourseRepository extends BaseRepository
         return $this->model;
     }
 
-    public function getList($keyword = null)
+    public function getList($keyword = null, $perPage = 10)
     {
+        if (!$perPage) {
+            $perPage = 10;
+        }
         $query = auth()->user()->isRole(User::ROLE_TEACHER)
             ? auth()->user()->coursesAssigned()
             : $this->model->query();
@@ -28,6 +31,6 @@ class CourseRepository extends BaseRepository
             ->latest()
             ->orderByDesc('id')
             ->with(['teachers'])
-            ->paginate(10);
+            ->paginate($perPage);
     }
 }

@@ -10,13 +10,15 @@ class ExamRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
+            'time' => 'required|integer|min:0',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'name' => 'tiêu đề'
+            'name' => 'tiêu đề',
+            'time' => 'thời gian'
         ];
     }
 }

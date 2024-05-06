@@ -34,7 +34,7 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->responsePaginate($this->repository->getList($request->keyword), CourseResource::class);
+        return $this->responsePaginate($this->repository->getList($request->keyword, $request->per_page), CourseResource::class);
     }
 
     /**

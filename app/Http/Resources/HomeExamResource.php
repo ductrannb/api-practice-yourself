@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ExamResource extends JsonResource
+class HomeExamResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,10 @@ class ExamResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'best_score' => 0,
+            'is_finished' => false,
             'time' => $this->time,
-            'author' => new AuthorResource($this->author),
             'count_question' => $this->questions->count(),
-            'created_at' => $this->created_at
         ];
     }
 }

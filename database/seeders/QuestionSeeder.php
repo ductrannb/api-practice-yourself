@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
+use App\Models\Lesson;
 use App\Models\Question;
 use App\Models\QuestionChoice;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;

@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answer_question_choices_selected', function (Blueprint $table) {
+        Schema::create('question_choice_selected', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('answer_question_id');
+            $table->unsignedBigInteger('question_id');
             $table->unsignedBigInteger('question_choice_id');
+            $table->unsignedBigInteger('assignable_id');
+            $table->unsignedBigInteger('sub_assignable_id')->nullable();
+            $table->tinyInteger('assignable_type')->comment('1. Course, 2. Exam');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answer_question_choices_selected');
+        Schema::dropIfExists('question_choice_selected');
     }
 };

@@ -18,7 +18,8 @@ class LessonResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'author' => new AuthorResource($this->author),
-            'count_question' => 0
+            'count_question' => $this->questions->count() ?? 0,
+            'completion' => $this->completion ?? 0,
         ];
     }
 }

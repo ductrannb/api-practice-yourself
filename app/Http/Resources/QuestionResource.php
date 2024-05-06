@@ -24,6 +24,7 @@ class QuestionResource extends JsonResource
             'author' => new AuthorResource($this->author),
             'assignable_id' => $this->assignable_id,
             'assignable_type' => $this->assignable_type,
+            'is_selected' => $this->is_selected ?? false
         ];
     }
 }

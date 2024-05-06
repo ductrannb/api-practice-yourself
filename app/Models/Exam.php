@@ -9,9 +9,9 @@ class Exam extends BaseModel
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function answers()
+    public function histories()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(ExamUser::class, 'exam_id')->where('user_id' , auth()->id())->latest();
     }
 
     public function questions()

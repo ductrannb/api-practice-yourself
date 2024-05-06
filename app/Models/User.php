@@ -32,7 +32,7 @@ class User extends Authentication implements JWTSubject
     {
         return Str::startsWith($this->attributes['avatar'], 'http')
             ? $this->attributes['avatar']
-            : ($this->attributes['avatar'] ? Storage::url($this->attributes['avatar']) : null);
+            : ($this->attributes['avatar'] ? env('APP_URL') . Storage::url($this->attributes['avatar']) : null);
     }
 
     public function isRole($roleId) : bool
