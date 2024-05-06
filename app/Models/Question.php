@@ -10,6 +10,9 @@ class Question extends BaseModel
     const LEVEL_MEDIUM = 2;
     const LEVEL_HARD = 3;
 
+    const TYPE_LESSON = 1;
+    const TYPE_EXAM = 2;
+
     public function lesson()
     {
         return $this->belongsTo(Lesson::class);

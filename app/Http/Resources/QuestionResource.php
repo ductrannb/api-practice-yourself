@@ -22,7 +22,8 @@ class QuestionResource extends JsonResource
             'correct_choice' => new QuestionChoiceResource($this->correctChoices->first()) ?? null,
             'solution' => $this->solution ?: '',
             'author' => new AuthorResource($this->author),
-            'lesson_id' => $this->lesson_id,
+            'assignable_id' => $this->assignable_id,
+            'assignable_type' => $this->assignable_type,
         ];
     }
 }

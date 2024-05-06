@@ -15,7 +15,8 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('lesson_id');
+            $table->unsignedBigInteger('assignable_id');
+            $table->tinyInteger('assignable_type');
             $table->longText('content');
             $table->longText('solution')->nullable();
             $table->unsignedTinyInteger('level')->default(Question::LEVEL_EASY);

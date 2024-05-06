@@ -26,7 +26,12 @@ class QuestionController extends Controller
      */
     public function index(Request $request)
     {
-        $questions = $this->repository->getList($request->lesson_id, $request->keyword, $request->level);
+        $questions = $this->repository->getList(
+            $request->assignable_id,
+            $request->keyword,
+            $request->level,
+            $request->assignable_type
+        );
         return $this->responsePaginate($questions, QuestionResource::class);
     }
 

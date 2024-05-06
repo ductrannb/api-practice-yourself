@@ -11,6 +11,7 @@ class Messages
     const UPDATE_PASSWORD_SUCCESS_MESSAGE = 'Cập nhật mật khẩu mới thành công.';
     const PASSWORD_INVALID_MESSAGE = 'Mật khẩu không chính xác';
     const REGISTER_SUCCESS_MESSAGE = 'Đăng ký thành công';
+    const LOGOUT_SUCCESS_MESSAGE = 'Đăng xuất thành công';
 
     const CREATE_SUCCESS_MESSAGE = 'Tạo thành công';
     const UPDATE_SUCCESS_MESSAGE = 'Cập nhật thành công';

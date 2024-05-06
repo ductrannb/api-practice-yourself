@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
@@ -33,13 +34,16 @@ Route::middleware(['teacher'])->group(function () {
         Route::get('/{course}', [CourseController::class, 'show'])->name('courses.show');
         Route::get('/get-name/{id}', [CourseController::class, 'getName'])->name('courses.get-name');
     });
-
     Route::prefix('lessons')->group(function () {
         Route::get('get-name/{id}', [LessonController::class, 'getName'])->name('lessons.get-name');
+    });
+    Route::prefix('exams')->group(function () {
+        Route::get('get-name/{id}', [ExamController::class, 'getName'])->name('exams.get-name');
     });
     Route::apiResources([
         'lessons' => LessonController::class,
         'questions' => QuestionController::class,
+        'exams' => ExamController::class,
     ]);
 });
 

@@ -121,7 +121,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return $this->responseOk('Successfully logged out');
+        return $this->responseOk(Messages::LOGOUT_SUCCESS_MESSAG);
     }
 
     public function refresh()

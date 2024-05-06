@@ -15,8 +15,7 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code', 12)->unique();
-            $table->unsignedBigInteger('author_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->softDeletes();
         });
