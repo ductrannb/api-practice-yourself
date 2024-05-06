@@ -61,7 +61,7 @@ class Controller extends BaseController
         );
     }
 
-    public function createdSuccess($message = 'Created successfully', $data = [])
+    public function createdSuccess($message = Messages::CREATE_SUCCESS_MESSAGE, $data = [])
     {
         return response()->json(
             ['message' => $message, 'data' => $data],
@@ -69,11 +69,19 @@ class Controller extends BaseController
         );
     }
 
-    public function deletedSuccess($message = 'Deleted successfully')
+    public function updatedSuccess($message = Messages::UPDATE_SUCCESS_MESSAGE, $data = [])
+    {
+        return response()->json(
+            ['message' => $message, 'data' => $data],
+            Response::HTTP_OK
+        );
+    }
+
+    public function deletedSuccess($message = Messages::DELETE_SUCCESS_MESSAGE)
     {
         return response()->json(
             ['message' => $message],
-            Response::HTTP_NO_CONTENT
+            Response::HTTP_OK
         );
     }
 

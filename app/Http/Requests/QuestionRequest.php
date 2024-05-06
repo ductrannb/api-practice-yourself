@@ -17,11 +17,12 @@ class QuestionRequest extends BaseRequest
             'choices.*.content' => 'required|string',
             'choices.*.is_correct' => 'required|boolean',
             'level' => ['required', Rule::in([Question::LEVEL_EASY, Question::LEVEL_MEDIUM, Question::LEVEL_HARD])],
-            'lesson_id' => 'required|exists:lessons,id',
+            'assignable_id' => 'required|integer',
+            'assignable_type' => ['required', Rule::in([Question::TYPE_LESSON, Question::TYPE_EXAM])],
             'solution' => 'nullable|string',
         ];
         if (!$this->isMethod('post')) {
-            return Arr::except($rules, ['lesson_id']);
+            return Arr::except($rules, ['assignable_id']);
         }
         return $rules;
     }
@@ -31,7 +32,8 @@ class QuestionRequest extends BaseRequest
         return [
             'content' => 'nội dung câu hỏi',
             'level' => 'mức độ',
-            'choices' => 'các đáp án'
+            'choices' => 'các đáp án',
+            'solution' => 'lời giải'
         ];
     }
 }

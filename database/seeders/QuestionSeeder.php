@@ -18,8 +18,9 @@ class QuestionSeeder extends Seeder
         $jsonString = file_get_contents(database_path('questions.json'));
         collect(json_decode($jsonString))->map(function ($question) {
             $record = Question::updateOrCreate([
-                'lesson_id' => $question->lesson_id,
+                'assignable_id' => $question->lesson_id,
                 'content' => $question->content,
+                'assignable_type' => Question::TYPE_LESSON,
             ], [
                 'user_id' => $question->user_id,
                 'level' => $question->level,
