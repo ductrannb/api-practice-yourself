@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('name');
             $table->date('birthday')->nullable();
-            $table->unsignedTinyInteger('gender')->default(User::GENDER_UNKNOWN);
-            $table->unsignedTinyInteger('role_id')->default(User::ROLE_USER);
+            $table->unsignedTinyInteger('gender')->default(User::GENDER_UNKNOWN)->comment('1. Male, 2. Female, 3. Unknown');
+            $table->unsignedTinyInteger('role_id')->default(User::ROLE_USER)->comment('1. User, 2. Teacher, 3. Admin');
             $table->unsignedInteger('balance')->default(0);
             $table->timestamps();
             $table->softDeletes();

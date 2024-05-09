@@ -15,7 +15,7 @@ class Question extends BaseModel
 
     public function lesson()
     {
-        return $this->belongsTo(Lesson::class);
+        return $this->belongsTo(Lesson::class, 'assignable_id');
     }
 
     public function choices()

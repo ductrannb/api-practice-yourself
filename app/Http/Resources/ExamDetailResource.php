@@ -17,6 +17,7 @@ class ExamDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'time' => $this->time,
             'author' => new AuthorResource($this->author),
             'questions' => QuestionResource::collection($this->questions)
         ];
