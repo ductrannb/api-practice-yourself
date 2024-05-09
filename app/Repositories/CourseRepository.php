@@ -22,7 +22,7 @@ class CourseRepository extends BaseRepository
         if (!$perPage) {
             $perPage = 10;
         }
-        $query = auth()->user()->isRole(User::ROLE_TEACHER)
+        $query = auth()->check() && auth()->user()->isRole(User::ROLE_TEACHER)
             ? auth()->user()->coursesAssigned()
             : $this->model->query();
         return $query->when($keyword != null, function ($query) use ($keyword) {
