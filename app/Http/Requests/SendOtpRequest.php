@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RequestForgetPasswordRequest extends BaseRequest
+class SendOtpRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class RequestForgetPasswordRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users'
+            'email' => 'required|email|max:255',
         ];
     }
 }

@@ -14,11 +14,12 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('lesson_id');
-            $table->text('content');
-            $table->string('code', 12)->unique();
-            $table->unsignedTinyInteger('level')->default(Question::LEVEL_EASY);
-            $table->string('image')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('assignable_id');
+            $table->tinyInteger('assignable_type')->comment('1. Lesson, 2. Exam');
+            $table->longText('content');
+            $table->longText('solution')->nullable();
+            $table->unsignedTinyInteger('level')->default(Question::LEVEL_EASY)->comment('1. Easy, 2. Medium, 3. Hard');
             $table->timestamps();
             $table->softDeletes();
         });

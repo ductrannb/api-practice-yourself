@@ -6,13 +6,17 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ForgetPasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\RequestForgetPasswordRequest;
+use App\Http\Requests\SendOtpRequest;
 use App\Http\Resources\UserResource;
 use App\Jobs\SendMailForgetPassword;
+use App\Models\Otp;
+use App\Models\User;
 use App\Repositories\OtpRepository;
 use App\Repositories\UserRepository;
 use App\Utils\Messages;
+use Exception;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -38,34 +42,58 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
+    /**
+     * @throws Exception
+     */
     public function register(RegisterRequest $request)
     {
-        return $this->createdSuccess(data: new UserResource($this->userRepository->create($request->validated())));
+        if (!$this->verifyOtp($request->email, $request->otp)) {
+            throw ValidationException::withMessages(['otp' => Messages::OTP_INVALID_MESSAGE]);
+        }
+        $user = $this->userRepository->create(Arr::except($request->validated(), ['otp']));
+        return $this->createdSuccess(Messages::REGISTER_SUCCESS_MESSAGE);
     }
 
-    public function requestForgetPassword(RequestForgetPasswordRequest $request)
+    public function sendOtp(SendOtpRequest $request)
     {
         $user = $this->userRepository->firstOfWhere(['email' => $request->email]);
         $otp = rand(100000, 999999);
+        if (!$user) {
+            $user = (object)['email' => $request->email, 'name' => 'bạn'];
+        }
         dispatch(new SendMailForgetPassword($user, $otp));
         return $this->responseOk(Messages::OTP_SEND_MESSAGE);
     }
 
     /**
+     * @throws Exception
+     */
+    public static function verifyOtp($email, $otp) : bool
+    {
+        $verifyOtp = Otp::where(['email' => $email, 'is_used' => false])->latest()->first();
+        if (!$verifyOtp) {
+            return false;
+        }
+        if ($verifyOtp->count_wrong >= self::MAX_COUNT_WRONG || $verifyOtp->expired_at < now()) {
+            throw new Exception(Messages::OTP_TIMEOUT_MESSAGE, Response::HTTP_REQUEST_TIMEOUT);
+        }
+        if ($verifyOtp->code != $otp) {
+            $verifyOtp->count_wrong ++;
+            $verifyOtp->save();
+            return false;
+        }
+        $verifyOtp->is_used = true;
+        $verifyOtp->save();
+        return true;
+    }
+
+    /**
      * @throws ValidationException
+     * @throws Exception
      */
     public function forgetPassword(ForgetPasswordRequest $request)
     {
-        $verifyOtp = $this->otpRepository->latestOfWhere(['email' => $request->email, 'is_used' => false]);
-        if (!$verifyOtp) {
-            throw ValidationException::withMessages(['otp' => Messages::OTP_INVALID_MESSAGE]);
-        }
-        if ($verifyOtp->count_wrong >= self::MAX_COUNT_WRONG || $verifyOtp->expired_at < now()) {
-            return $this->responseError(Messages::OTP_TIMEOUT_MESSAGE, errorCode: Response::HTTP_REQUEST_TIMEOUT);
-        }
-        if ($verifyOtp->code != $request->otp) {
-            $verifyOtp->count_wrong ++;
-            $verifyOtp->save();
+        if (!$this->verifyOtp($request->email, $request->otp)) {
             throw ValidationException::withMessages(['otp' => Messages::OTP_INVALID_MESSAGE]);
         }
         $this->userRepository->updateWithConditions(['email' => $request->email], ['password' => $request->new_password]);
@@ -93,7 +121,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return $this->responseOk('Successfully logged out');
+        return $this->responseOk(Messages::LOGOUT_SUCCESS_MESSAGE);
     }
 
     public function refresh()

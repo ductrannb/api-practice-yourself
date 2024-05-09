@@ -29,7 +29,7 @@ class SendMailForgetPassword implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->user)->send(new OtpMail(
+        Mail::to($this->user->email)->send(new OtpMail(
             $this->user->name,
             $this->otp,
             'Bạn đang yêu cầu đặt lại mật khẩu từ hệ thống ' . env('APP_NAME') . '.'

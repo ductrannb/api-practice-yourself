@@ -6,11 +6,17 @@ class Exam extends BaseModel
 {
     public function author()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function answers()
+    public function histories()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(ExamUser::class, 'exam_id')->where('user_id' , auth()->id())->latest();
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'assignable_id')
+            ->where('assignable_type', Question::TYPE_EXAM);
     }
 }

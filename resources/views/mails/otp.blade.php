@@ -6,7 +6,7 @@
             </a>
         </div>
         <p style="font-size:1.1em">
-            Hi, {{ $name }}
+            Chào {{ $name }},
         </p>
         <p>
             {{ $text }} OTP sẽ hết hạn sau 5 phút.

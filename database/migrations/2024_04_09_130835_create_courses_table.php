@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code', 12);
+            $table->string('image', 500);
             $table->unsignedInteger('price');
-            $table->unsignedBigInteger('teacher_id')->nullable();
+            $table->unsignedInteger('sold')->default(0);
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

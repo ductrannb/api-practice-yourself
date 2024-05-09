@@ -60,18 +60,30 @@ abstract class BaseRepository
         return $record->delete();
     }
 
-    public function find($id)
+    public function find($id, array $relations = [])
     {
-        return $this->model->find($id);
+        $record = $this->model->with($relations)->find($id);
+        if (!$record) {
+            throw new RecordsNotFoundException();
+        }
+        return $record;
     }
 
     public function firstOfWhere(array $conditions)
     {
-        return $this->model->where($conditions)->first();
+        $record = $this->model->where($conditions)->first();
+        if (!$record) {
+            throw new RecordsNotFoundException();
+        }
+        return $record;
     }
     public function latestOfWhere(array $conditions)
     {
-        return $this->model->where($conditions)->latest()->first();
+        $record = $this->model->where($conditions)->latest()->first();
+        if (!$record) {
+            throw new RecordsNotFoundException();
+        }
+        return $record;
     }
 
     public function where(array $conditions)
