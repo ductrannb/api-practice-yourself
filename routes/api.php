@@ -19,6 +19,10 @@ Route::prefix('home')->group(function () {
     Route::prefix('courses')->group(function () {
         Route::get('{id}', [HomeController::class, 'courseDetail'])->name('home.courses.detail');
     });
+    Route::prefix('exams')->group(function () {
+        Route::get('', [HomeController::class, 'examList'])->name('home.exams.index');
+        Route::get('overview/{id}', [HomeController::class, 'examOverview'])->name('home.exams.overview');
+    });
 });
 
 Route::prefix('courses')->group(function () {
@@ -40,8 +44,6 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
             Route::post('select', [LessonController::class, 'selectChoice'])->name('home.lessons.select');
         });
         Route::prefix('exams')->group(function () {
-            Route::get('', [HomeController::class, 'examList'])->name('home.exams.index');
-            Route::get('overview/{id}', [HomeController::class, 'examOverview'])->name('home.exams.overview');
             Route::get('review/{id}', [HomeController::class, 'examReview'])->name('home.exams.review');
             Route::get('{id}', [HomeController::class, 'examDetail'])->name('home.exams.detail');
             Route::post('submit/{id}', [HomeController::class, 'examSubmit'])->name('home.exams.submit');
