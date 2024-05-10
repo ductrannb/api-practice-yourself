@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ForgetPasswordRequest;
+use App\Http\Requests\LoginGoogleRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\SendOtpRequest;
@@ -18,11 +19,13 @@ use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     private const REFRESH_TOKEN_EXPIRED = 4320; //minutes
+    private const GOOGLE_CHECK_AUTH = 'https://www.googleapis.com/oauth2/v3/userinfo?access_token=';
     private const MAX_COUNT_WRONG = 10;
     private $userRepository;
     private $otpRepository;
@@ -39,6 +42,31 @@ class AuthController extends Controller
         if (!$token) {
             return $this->responseUnauthorized();
         }
+        return $this->respondWithToken($token);
+    }
+
+    public function loginGoogle(LoginGoogleRequest $request)
+    {
+        $response = Http::get(self::GOOGLE_CHECK_AUTH . $request->access_token);
+        if ($response->failed()) {
+            return $this->responseError(Messages::UNAUTHORIZED_MESSAGE, [], Response::HTTP_UNAUTHORIZED);
+        }
+        $userData = $response->json();
+        if (
+            !$userData['email_verified']
+            || $request->email != $userData['email']
+            || $request->name != $userData['name']
+        ) {
+            return $this->responseError(Messages::UNAUTHORIZED_MESSAGE, [], Response::HTTP_UNAUTHORIZED);
+        }
+        $user = $this->userRepository->updateOrCreate([
+            'email' => $userData['email']
+        ], [
+            'name' => $userData['name'],
+            'avatar' => $userData['picture'],
+            'password' => $userData['sub'],
+        ]);
+        $token = auth()->login($user);
         return $this->respondWithToken($token);
     }
 
