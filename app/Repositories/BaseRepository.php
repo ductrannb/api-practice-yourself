@@ -32,6 +32,11 @@ abstract class BaseRepository
         return $this->model->create($data);
     }
 
+    public function updateOrCreate(array $conditions, array $data)
+    {
+        return $this->model->updateOrCreate($conditions, $data);
+    }
+
     public function update($id, $data)
     {
         $record = $this->model->find($id);
@@ -76,6 +81,11 @@ abstract class BaseRepository
             throw new RecordsNotFoundException();
         }
         return $record;
+    }
+
+    public function firstOfWhereNotFail(array $conditions)
+    {
+        return $this->model->where($conditions)->first();
     }
     public function latestOfWhere(array $conditions)
     {
