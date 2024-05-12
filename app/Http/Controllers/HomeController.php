@@ -75,7 +75,8 @@ class HomeController extends Controller
     {
         $lesson = Lesson::with([
             'questions', 'questions.correctChoices', 'questions.choices',
-            'questions.author', 'course', 'questionsSelected', 'questionsSelected.question.correctChoices'
+            'questions.author', 'course', 'questionsSelected', 'questionsSelected.question.correctChoices',
+            'course.courseUserAuth'
         ])->find($id);
         $lesson->questions->map(function ($question) use ($lesson) {
             $question->is_selected = $lesson->questionsSelected->contains('question_id', $question->id);

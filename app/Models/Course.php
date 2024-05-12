@@ -21,6 +21,11 @@ class Course extends BaseModel
             ->where('type', CourseUser::TYPE_USER);
     }
 
+    public function courseUserAuth()
+    {
+        return $this->hasMany(CourseUser::class)->where('user_id', auth()->id());
+    }
+
     public function lessons()
     {
         return $this->hasMany(Lesson::class);

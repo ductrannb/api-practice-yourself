@@ -18,6 +18,7 @@ class HomeLessonDetailResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'course_id' => $this->course_id,
+            'chat_session' => $this->course->courseUserAuth->first()->gemini_chat_id ?? null,
             'course_name' => $this->course->name ?? null,
             'questions' => QuestionResource::collection($this->questions),
             'total_questions' => $this->questions->count() ?? 0,
