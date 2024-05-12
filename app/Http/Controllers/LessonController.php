@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Gemini\GeminiService;
 use App\Http\Requests\LessonRequest;
 use App\Http\Requests\SelectChoiceRequest;
+use App\Http\Resources\GeminiChatResource;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\QuestionChoiceSelectedResource;
 use App\Models\CourseUser;
+use App\Models\Lesson;
 use App\Models\Question;
 use App\Models\QuestionChoiceSelected;
 use App\Models\User;
@@ -15,6 +18,7 @@ use App\Utils\Messages;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class LessonController extends Controller
 {
@@ -108,6 +112,21 @@ class LessonController extends Controller
         }
         $questionChoiceSelected->is_correct = $questionChoiceSelected->question_choice_id === $question->correctChoices->first()->id ?? false;
         return $this->responseOk(data: new QuestionChoiceSelectedResource($questionChoiceSelected));
+    }
+
+    public function startChat($id)
+    {
+        $lesson = Lesson::findOrFail($id);
+        if (!$this->isAssigned($lesson->course_id)) {
+            throw new RecordsNotFoundException();
+        }
+        $chat = null;
+        DB::transaction(function () use ($lesson, &$chat) {
+            $gemini = new GeminiService();
+            $chat = $gemini->startChat();
+            $lesson->course->courseUserAuth->first()->update(['gemini_chat_id' => $chat->getId()]);
+        });
+        return $this->responseOk(data: new GeminiChatResource($chat));
     }
 
     private function isAssigned($course_id) : bool
