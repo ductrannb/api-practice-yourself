@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GeminiChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\QuestionController;
@@ -43,12 +44,18 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
         Route::prefix('lessons')->group(function () {
             Route::get('{id}', [HomeController::class, 'lessonDetail'])->name('home.lessons.detail');
             Route::post('select', [LessonController::class, 'selectChoice'])->name('home.lessons.select');
+            Route::post('start-chat/{id}', [LessonController::class, 'startChat'])->name('home.lessons.select');
         });
         Route::prefix('exams')->group(function () {
             Route::get('review/{id}', [HomeController::class, 'examReview'])->name('home.exams.review');
             Route::get('{id}', [HomeController::class, 'examDetail'])->name('home.exams.detail');
             Route::post('submit/{id}', [HomeController::class, 'examSubmit'])->name('home.exams.submit');
         });
+    });
+
+    Route::prefix('gemini')->group(function () {
+        Route::get('{uuid?}', [GeminiChatController::class, 'index'])->name('gemini.index');
+        Route::post('send-message', [GeminiChatController::class, 'sendMessage'])->name('gemini.send-message');
     });
 });
 
