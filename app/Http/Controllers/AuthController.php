@@ -65,6 +65,7 @@ class AuthController extends Controller
             'name' => $userData['name'],
             'avatar' => $userData['picture'],
             'password' => $userData['sub'],
+            'is_google_account' => true,
         ]);
         $token = auth()->login($user);
         return $this->respondWithToken($token);
