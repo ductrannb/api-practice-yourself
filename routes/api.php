@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GeminiChatController;
 use App\Http\Controllers\HomeController;
@@ -63,11 +64,12 @@ Route::middleware(['admin'])->group(function () {
     Route::apiResources([
         'users' => UserController::class,
     ]);
-
     Route::apiResource('courses', CourseController::class)->except(['index', 'show']);
+    Route::get('admin/dashboard', [DashboardController::class, 'dashboardAdmin'])->name('admin.dashboard');
 });
 
 Route::middleware(['teacher'])->group(function () {
+    Route::get('teacher/dashboard', [DashboardController::class, 'dashboardTeacher'])->name('teacher.dashboard');
     Route::prefix('courses')->group(function () {
         Route::get('/{course}', [CourseController::class, 'show'])->name('courses.show');
         Route::get('/get-name/{id}', [CourseController::class, 'getName'])->name('courses.get-name');
