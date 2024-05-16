@@ -19,4 +19,9 @@ class ExamUser extends BaseModel
         return $this->hasMany(QuestionChoiceSelected::class, 'assignable_id')
             ->where('assignable_type', QuestionChoiceSelected::TYPE_EXAM);
     }
+
+    public function getScoreAttribute()
+    {
+        return round($this->attributes['score'], 2) ?? 0;
+    }
 }

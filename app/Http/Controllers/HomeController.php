@@ -11,6 +11,7 @@ use App\Http\Resources\HomeExamOverviewResource;
 use App\Http\Resources\HomeExamResource;
 use App\Http\Resources\HomeExamReviewResource;
 use App\Http\Resources\HomeLessonDetailResource;
+use App\Http\Resources\UserExamListResource;
 use App\Models\Course;
 use App\Models\CourseUser;
 use App\Models\Exam;
@@ -67,7 +68,13 @@ class HomeController extends Controller
         if ($course->is_bought) {
             return $this->responseError(Messages::REGISTER_COURSE_EXISTED, errorCode: Response::HTTP_NOT_ACCEPTABLE);
         }
-        CourseUser::create(['user_id' => auth()->id(), 'course_id' => $id, 'type' => CourseUser::TYPE_USER]);
+        if (auth()->user()->balance < $course->price) {
+            return $this->responseError(Messages::REGISTER_COURSE_NOT_ENOUGH_MONEY, errorCode: Response::HTTP_NOT_ACCEPTABLE);
+        }
+        DB::transaction(function () use ($course) {
+            auth()->user()->decrement('balance', $course->price);
+            CourseUser::create(['user_id' => auth()->id(), 'course_id' => $course->id, 'type' => CourseUser::TYPE_USER]);
+        });
         return $this->responseOk(Messages::REGISTER_COURSE_SUCCESS);
     }
 
@@ -130,7 +137,11 @@ class HomeController extends Controller
             $examUser = ExamUser::create(['exam_id' => $exam->id, 'user_id' => auth()->id(), 'total_question' => $exam->questions->count()]);
             $examUser->load(['exam.questions.correctChoices']);
             collect($request->selected)->each(function ($selected) use ($examUser) {
-                $examUser->selected()->create(array_merge($selected, ['assignable_type' => QuestionChoiceSelected::TYPE_EXAM]));
+                $examUser->selected()->create(array_merge($selected, [
+                    'user_id' => auth()->id(),
+                    'is_correct' => $examUser->exam->questions->find($selected['question_id'])->correctChoices->contains('id', $selected['question_choice_id']),
+                    'assignable_type' => QuestionChoiceSelected::TYPE_EXAM
+                ]));
             });
             $countCorrect = 0;
             $examUser->selected->map(function ($selected) use ($examUser, &$countCorrect) {
@@ -142,5 +153,27 @@ class HomeController extends Controller
             $score = (10 / $examUser->exam->questions->count()) * $countCorrect ?? 0;
             $examUser->update(['score' =>  $score, 'count_correct_question' => $countCorrect]);
         });
+    }
+
+    public function userListCourses(Request $request)
+    {
+        $courses = Course::whereIn('id', CourseUser::where('user_id', auth()->id())
+                ->where('type', CourseUser::TYPE_USER)
+                ->pluck('course_id')->toArray()
+            )
+            ->when($request->keyword, function ($query, $keyword) {
+                return $query->where('name', 'like', "%$keyword%");
+            })
+            ->with(['lessons', 'questions', 'teachers'])
+            ->paginate(10);
+        return $this->responsePaginate($courses, CourseResource::class);
+    }
+
+    public function userListExams(Request $request)
+    {
+        $exams = Exam::with(['questions', 'histories'])
+            ->whereIn('id', ExamUser::select('exam_id')->where('user_id', auth()->id())->distinct()->get()->toArray())
+            ->paginate(10);
+        return $this->responsePaginate($exams, UserExamListResource::class);
     }
 }

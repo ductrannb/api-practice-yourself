@@ -20,7 +20,8 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'name' => fake()->name(),
             'password' => bcrypt(self::DEFAULT_PASSWORD),
-            'role_id' => fake()->randomElement([1, 2])
+            'role_id' => fake()->randomElement([1, 2]),
+            'created_at' => fake()->dateTimeBetween('-1 years', 'now'),
         ];
     }
 }

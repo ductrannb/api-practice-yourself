@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GeminiChatController;
 use App\Http\Controllers\HomeController;
@@ -37,6 +38,12 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
     Route::get('me', [AuthController::class, 'me'])->name('auth-me');
     Route::post('change-password', [AuthController::class, 'changePassword'])->name('auth-change-password');
 
+    Route::prefix('user')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'dashboardUser'])->name('user.dashboard');
+        Route::get('courses', [HomeController::class, 'userListCourses'])->name('user.courses');
+        Route::get('exams', [HomeController::class, 'userListExams'])->name('user.exams');
+    });
+
     Route::prefix('home')->group(function () {
         Route::prefix('courses')->group(function () {
             Route::post('subscribe/{id}', [HomeController::class, 'subscribeCourse'])->name('home.courses.subscribe');
@@ -63,11 +70,12 @@ Route::middleware(['admin'])->group(function () {
     Route::apiResources([
         'users' => UserController::class,
     ]);
-
     Route::apiResource('courses', CourseController::class)->except(['index', 'show']);
+    Route::get('admin/dashboard', [DashboardController::class, 'dashboardAdmin'])->name('admin.dashboard');
 });
 
 Route::middleware(['teacher'])->group(function () {
+    Route::get('teacher/dashboard', [DashboardController::class, 'dashboardTeacher'])->name('teacher.dashboard');
     Route::prefix('courses')->group(function () {
         Route::get('/{course}', [CourseController::class, 'show'])->name('courses.show');
         Route::get('/get-name/{id}', [CourseController::class, 'getName'])->name('courses.get-name');

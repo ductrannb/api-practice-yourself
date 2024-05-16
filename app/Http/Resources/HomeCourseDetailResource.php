@@ -23,6 +23,7 @@ class HomeCourseDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'price' => $this->price,
             'lessons' => LessonResource::collection($this->lessons),
             'total_question' => $totalQuestion,
             'percentage_easy' => $perEasy,
