@@ -137,7 +137,11 @@ class HomeController extends Controller
             $examUser = ExamUser::create(['exam_id' => $exam->id, 'user_id' => auth()->id(), 'total_question' => $exam->questions->count()]);
             $examUser->load(['exam.questions.correctChoices']);
             collect($request->selected)->each(function ($selected) use ($examUser) {
-                $examUser->selected()->create(array_merge($selected, ['assignable_type' => QuestionChoiceSelected::TYPE_EXAM]));
+                $examUser->selected()->create(array_merge($selected, [
+                    'user_id' => auth()->id(),
+                    'is_correct' => $examUser->exam->questions->find($selected['question_id'])->correctChoices->contains('id', $selected['question_choice_id']),
+                    'assignable_type' => QuestionChoiceSelected::TYPE_EXAM
+                ]));
             });
             $countCorrect = 0;
             $examUser->selected->map(function ($selected) use ($examUser, &$countCorrect) {
