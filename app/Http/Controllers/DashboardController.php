@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DashboardAdminResource;
 use App\Http\Resources\DashboardTeacherResource;
+use App\Http\Resources\DashboardUserResource;
 use App\Models\CourseUser;
 use App\Models\Exam;
 use App\Models\ExamUser;
 use App\Models\Question;
+use App\Models\QuestionChoiceSelected;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -85,6 +87,40 @@ class DashboardController extends Controller
         ]));
     }
 
+    public function dashboardUser(Request $request)
+    {
+        $type = $request->type ?: self::TYPE_WEEK;
+        $courseUserList = CourseUser::where('created_at', '>=', Carbon::today()->subYears()->startOfYear()->format('Y-m-d H:i:s'))
+            ->where('type', CourseUser::TYPE_USER)
+            ->where('user_id', auth()->id())
+            ->get();
+        $examUserList = ExamUser::where('created_at', '>=', Carbon::today()->subYears()->startOfYear()->format('Y-m-d H:i:s'))
+            ->where('user_id', auth()->id())
+            ->get();
+        $questionList = QuestionChoiceSelected::where('user_id', auth()->id())
+            ->when($type == self::TYPE_DAY, function ($query) {
+                return $query->where('created_at', '>=', Carbon::today()->subDays(self::DAY_LIMIT)->startOfYear()->format('Y-m-d H:i:s'));
+            })
+            ->when($type == self::TYPE_WEEK, function ($query) {
+                return $query->where('created_at', '>=', Carbon::today()->subWeeks(self::WEEK_LIMIT)->startOfYear()->format('Y-m-d H:i:s'));
+            })
+            ->when($type == self::TYPE_MONTH, function ($query) {
+                return $query->where('created_at', '>=', Carbon::today()->subMonths(self::MONTH_LIMIT)->startOfYear()->format('Y-m-d H:i:s'));
+            })
+            ->get();
+
+        $mainChart = (object) [
+            'labels' => $this->getLabels($type),
+            'question_data' => $this->getMainChartData($questionList, $type),
+            'correct_rate_data' => $this->getMainChartCorrectRateData($questionList, $type)
+        ];
+        return $this->responseOk(data: new DashboardUserResource((object) [
+            'courseChart' => $this->getMiniChartData($courseUserList),
+            'examChart' => $this->getMiniChartData($examUserList),
+            'mainChart' => $mainChart
+        ]));
+    }
+
     public function getLabels($type = self::TYPE_WEEK)
     {
         $labels = [];
@@ -114,12 +150,12 @@ class DashboardController extends Controller
         return round(($thisValue - $lastValue) / $lastValue * 100, 1) . '%';
     }
 
-    private function getMainChartData($courseUserList, $type = self::TYPE_WEEK): array
+    public function getMainChartData($list, $type = self::TYPE_WEEK)
     {
         $data = [];
         if ($type == self::TYPE_DAY) {
             $data = array_map(
-                fn($i) => $courseUserList
+                fn($i) => $list
                     ->where('created_at', '>=', Carbon::today()->subDays($i)->startOfDay()->format('Y-m-d H:i:s H:i:s'))
                     ->where('created_at', '<=', Carbon::today()->subDays($i)->endOfDay()->format('Y-m-d H:i:s H:i:s'))
                     ->count(),
@@ -128,7 +164,7 @@ class DashboardController extends Controller
         }
         if ($type == self::TYPE_WEEK) {
             $data = array_map(
-                fn($i) => $courseUserList
+                fn($i) => $list
                     ->where('created_at', '>=', Carbon::today()->subWeeks($i)->startOfWeek()->format('Y-m-d H:i:s'))
                     ->where('created_at', '<=', Carbon::today()->subWeeks($i)->endOfWeek()->format('Y-m-d H:i:s'))
                     ->count(),
@@ -137,7 +173,7 @@ class DashboardController extends Controller
         }
         if ($type == self::TYPE_MONTH) {
             $data = array_map(
-                fn($i) => $courseUserList
+                fn($i) => $list
                     ->where('created_at', '>=', Carbon::today()->subMonths($i)->startOfMonth()->format('Y-m-d H:i:s'))
                     ->where('created_at', '<=', Carbon::today()->subMonths($i)->endOfMonth()->format('Y-m-d H:i:s'))
                     ->count(),
@@ -145,6 +181,46 @@ class DashboardController extends Controller
             );
         }
         return array_reverse($data);
+    }
+
+    private function getMainChartCorrectRateData($list, $type = self::TYPE_WEEK): array
+    {
+        $data = [];
+        if ($type == self::TYPE_DAY) {
+            $data = array_map(
+                fn($i) => $this->getCorrectRate(
+                    $list->where('created_at', '>=', Carbon::today()->subDays($i)->startOfDay()->format('Y-m-d H:i:s H:i:s'))
+                        ->where('created_at', '<=', Carbon::today()->subDays($i)->endOfDay()->format('Y-m-d H:i:s H:i:s'))
+                ),
+                range(0, self::DAY_LIMIT - 1)
+            );
+        }
+        if ($type == self::TYPE_WEEK) {
+            $data = array_map(
+                fn($i) => $this->getCorrectRate(
+                    $list->where('created_at', '>=', Carbon::today()->subWeeks($i)->startOfWeek()->format('Y-m-d H:i:s'))
+                        ->where('created_at', '<=', Carbon::today()->subWeeks($i)->endOfWeek()->format('Y-m-d H:i:s'))
+                ),
+                range(0, self::WEEK_LIMIT - 1)
+            );
+        }
+        if ($type == self::TYPE_MONTH) {
+            $data = array_map(
+                fn($i) => $this->getCorrectRate(
+                    $list->where('created_at', '>=', Carbon::today()->subMonths($i)->startOfMonth()->format('Y-m-d H:i:s'))
+                        ->where('created_at', '<=', Carbon::today()->subMonths($i)->endOfMonth()->format('Y-m-d H:i:s'))
+                ),
+                range(0, self::MONTH_LIMIT - 1)
+            );
+        }
+        return array_reverse($data);
+    }
+
+    private function getCorrectRate($list)
+    {
+        $total = $list->count();
+        $correct = $list->where('is_correct', true)->count();
+        return $total == 0 ? 0 : round($correct / $total * 100, 2);
     }
 
     private function getMiniChartData($list, $role = null)

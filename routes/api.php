@@ -38,6 +38,12 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
     Route::get('me', [AuthController::class, 'me'])->name('auth-me');
     Route::post('change-password', [AuthController::class, 'changePassword'])->name('auth-change-password');
 
+    Route::prefix('user')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'dashboardUser'])->name('user.dashboard');
+        Route::get('courses', [HomeController::class, 'userListCourses'])->name('user.courses');
+        Route::get('exams', [HomeController::class, 'userListExams'])->name('user.exams');
+    });
+
     Route::prefix('home')->group(function () {
         Route::prefix('courses')->group(function () {
             Route::post('subscribe/{id}', [HomeController::class, 'subscribeCourse'])->name('home.courses.subscribe');

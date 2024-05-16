@@ -21,6 +21,7 @@ class Messages
 
     const REGISTER_COURSE_SUCCESS = 'Đăng ký khóa học thành công.';
     const REGISTER_COURSE_EXISTED = 'Bạn đã đăng ký khóa học này rồi.';
+    const REGISTER_COURSE_NOT_ENOUGH_MONEY = 'Số dư của bạn không đủ.';
     const REGISTER_COURSE_NOT_EXIST = 'Bạn chưa đăng ký khóa học này.';
 
     const EXAM_IS_EMPTY = 'Bài thi thử không có câu hỏi nào.';
