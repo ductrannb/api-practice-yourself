@@ -7,6 +7,7 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GeminiChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,10 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
     Route::post('refresh', [AuthController::class, 'refresh'])->name('auth-refresh-token');
     Route::get('me', [AuthController::class, 'me'])->name('auth-me');
     Route::post('change-password', [AuthController::class, 'changePassword'])->name('auth-change-password');
+
+    Route::prefix('payment')->group(function () {
+        Route::post('create-link', [PaymentController::class, 'createPaymentLink'])->name('payment.create-link');
+    });
 
     Route::prefix('user')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'dashboardUser'])->name('user.dashboard');
