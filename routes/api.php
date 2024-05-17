@@ -18,6 +18,12 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('forget-password');
 
+Route::any('payos/callback', function () {
+    $data = request()->all();
+    info($data);
+    return response()->json(['message' => 'Hello world']);
+});
+
 Route::prefix('home')->group(function () {
     Route::get('', [HomeController::class, 'index'])->name('home.index');
     Route::prefix('courses')->group(function () {
