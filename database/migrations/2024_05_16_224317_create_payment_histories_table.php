@@ -15,10 +15,13 @@ return new class extends Migration
             $table->uuid('id');
             $table->unsignedBigInteger('order_code')->unique();
             $table->unsignedInteger('amount');
+            $table->tinyInteger('type');
+            $table->string('checkout_url');
             $table->string('status');
-            $table->timestamp('link_create_at')->nullable();
+            $table->timestamp('expired_at')->nullable();
             $table->json('transactions');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -2,48 +2,82 @@
 
 namespace App\Helpers;
 
+use App\Models\PaymentHistory;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Response;
 use PayOS\PayOS;
 
 class PayOSHelper
 {
-    public const DEFAULT_RETURN_ENDPOINT = '/payos/return';
-    public const DEFAULT_CANCEL_ENDPOINT = '/payos/cancel';
+    public const DEFAULT_RETURN_ENDPOINT = 'api/payos/return';
+    public const DEFAULT_CANCEL_ENDPOINT = 'api/payos/cancel';
 
-    private $payos;
+    private $payOS;
 
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
-        $this->payos = new PayOS(env('PAYOS_CLIENT_ID'), env('PAYOS_API_KEY'), env('PAYOS_CHECKSUM_KEY'));
+        if (!env('PAYOS_CLIENT_ID') || !env('PAYOS_API_KEY') || !env('PAYOS_CHECKSUM_KEY')) {
+            throw new Exception('Missing payment configuration', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        $this->payOS = new PayOS(env('PAYOS_CLIENT_ID'), env('PAYOS_API_KEY'), env('PAYOS_CHECKSUM_KEY'));
     }
 
     public function createPaymentLink(
-        int $orderCode, int $amount,
+        int $amount,
+        int $type,
         string $description = null,
         string $returnEndpoint = null,
         string $cancelEndpoint = null
     ) {
         $data = [
-            'orderCode' => $orderCode,
+            'orderCode' => $this->getOrderCode(),
             'amount' => $amount,
-            'description' => $description ?: 'Thanh toán tại ' . env('APP_NAME'),
-            'returnUrl' => trim(env('APP_URL'), '/')
-                . '/'
-                . trim(($returnEndpoint ?: self::DEFAULT_RETURN_ENDPOINT), '/'),
-            'cancelUrl' => trim(env('APP_URL'), '/')
-                . '/'
-                . trim(($cancelEndpoint ?: self::DEFAULT_CANCEL_ENDPOINT), '/'),
+            'description' => $description ?: ($type == PaymentHistory::TYPE_RECHARGE ? 'Nạp tiền tại Practice' : 'Thanh toán tại Practice'),
+            'returnUrl' => $this->getUrl(self::DEFAULT_RETURN_ENDPOINT, $returnEndpoint),
+            'cancelUrl' => $this->getUrl(self::DEFAULT_CANCEL_ENDPOINT, $returnEndpoint),
+            'buyerEmail' => auth()->user()->email,
+            'expiredAt' => Carbon::now()->addMinutes(20)->getTimestamp()
         ];
-
         return $this->payOS->createPaymentLink($data);
     }
 
-    public function getPaymentLinkInfo(int $orderCode)
+    /**
+     * @throws Exception
+     */
+    public function getPaymentLinkInformation(int|string $orderCode): array
     {
-        return $this->payOS->getPaymentLinkInfomation($orderCode);
+        return $this->payOS->getPaymentLinkInformation($orderCode);
     }
 
-    public function cancelPaymentLink(int $orderCode)
+    /**
+     * @throws Exception
+     */
+    public function cancelPaymentLink(int|string $orderCode): array
     {
-        return $this->payos->cancelPaymentLink($orderCode);
+        return $this->payOS->cancelPaymentLink($orderCode);
+    }
+
+    public function verifyWebhook($data)
+    {
+        return $this->payOS->verifyPaymentWebhookData($data);
+    }
+
+    public function getOrderCode(): int
+    {
+        $orderCode = rand(100000, 99999999);
+        if (PaymentHistory::where('order_code', $orderCode)->exists()) {
+            return $this->getOrderCode();
+        }
+        return $orderCode;
+    }
+
+    public function getUrl(string $default, $returnEndpoint = null)
+    {
+        return 'https://api.ductran.site/api/hello';
+        return trim(env('APP_URL'), '/') . '/' . trim(($returnEndpoint ?: $default), '/');
     }
 }
