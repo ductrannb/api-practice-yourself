@@ -18,6 +18,8 @@ Route::post('send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('forget-password');
 
 Route::any('payos/callback', function () {
+    $data = request()->all();
+    info($data);
     return response()->json(['message' => 'Hello world']);
 });
 
