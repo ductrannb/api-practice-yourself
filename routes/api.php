@@ -17,7 +17,7 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('forget-password');
 
-Route::post('payos/callback', function () {
+Route::any('payos/callback', function () {
     return response()->json(['message' => 'Hello world']);
 });
 
