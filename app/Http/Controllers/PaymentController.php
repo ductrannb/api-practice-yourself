@@ -82,8 +82,8 @@ class PaymentController extends Controller
     {
         DB::transaction(function() use ($request) {
             if ($request->success) {
-                $data = $request->all();
-                $this->payOSHelper->verifyWebhook($data);
+                $data = $request->data;
+                $this->payOSHelper->verifyWebhook($request->all());
                 $transaction = PaymentHistory::where('order_code', $data['orderCode'])->first();
                 $oldStatus = $transaction->status;
                 $transaction->update([
