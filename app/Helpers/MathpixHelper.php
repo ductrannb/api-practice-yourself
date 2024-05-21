@@ -19,28 +19,27 @@ class MathpixHelper
     private const ADDING_CHOICE_THIRD = 4;
     private const ADDING_CHOICE_FOURTH = 5;
 
-    public function getPdfLinesData(string $pdfId)
+    public function getPdfLinesData(string $pdfId): array
     {
         $response = $this->get("{$pdfId}.lines.json");
-        $this->processData($response->json()['pages']);
-        return $response->json();
+        return $this->processData($response->json()['pages']);
     }
 
-    public function processData(array $pages)
+    public function processData(array $pages): array
     {
+        // Gộp các dòng văn bản từ các trang thành một mảng
         $lines = [];
         Arr::map($pages, function ($page) use (&$lines) {
             $lines = array_merge($lines, $page['lines']);
         });
 
-        $name = $this->getName($lines);
         $questions = [];
         $questionInstance = new QuestionInformation();
         $adding = null;
         for ($i = 0; $i < count($lines); $i++) {
             if (Str::startsWith($lines[$i]['text'], 'Câu')) {
-                if ($adding === self::ADDING_CHOICE_FOURTH) {
-                    $questions[] = $questionInstance;
+                if ($adding === self::ADDING_CHOICE_FOURTH) { // Kết thúc câu hỏi
+                    $this->addQuestion($questionInstance, $questions);
                 }
                 $questionInstance = new QuestionInformation();
                 $adding = self::ADDING_QUESTION;
@@ -58,6 +57,7 @@ class MathpixHelper
                 $adding = self::ADDING_CHOICE_FOURTH;
                 $questionInstance->choices[3]['content'] = $lines[$i]['text'];
             } else {
+                // Nếu không phải là đầu nội dung câu hỏi hoặc đáp án thì thêm vào nội dung câu hỏi hoặc đáp án
                 switch ($adding) {
                     case self::ADDING_QUESTION:
                         $questionInstance->content .= ' ' . $lines[$i]['text'];
@@ -77,21 +77,44 @@ class MathpixHelper
                 }
             }
         }
-        dd($questions);
+        $this->addQuestion($questionInstance, $questions);
+        return $questions;
     }
 
-    private function getName(array $lines = [])
+    private function addQuestion(QuestionInformation $questionInstance, &$questions)
     {
-        $defaultName = 'Đề thi thử import-' . now()->format('Y-m-d H:i:s');
-        if (!count($lines) > 0) {
-            return $defaultName;
-        }
-        for ($i = 0; $i < count($lines); $i++) {
-            if ($lines[$i]['column'] === 2) {
-                return $lines[$i]['text'] ?? $defaultName;
+        $questionInstance->content = $this->handleData($questionInstance->content);
+        $questionInstance->choices[0]['content'] = $this->handleData($questionInstance->choices[0]['content']);
+        $questionInstance->choices[1]['content'] = $this->handleData($questionInstance->choices[1]['content']);
+        $questionInstance->choices[2]['content'] = $this->handleData($questionInstance->choices[2]['content']);
+        $questionInstance->choices[3]['content'] = $this->handleData($questionInstance->choices[3]['content']);
+        $questions[] = $questionInstance;
+    }
+
+    private function handleData($content)
+    {
+        // remove question | choice number
+        $patterns = [
+            '/Câu \d+: /',
+            '/A\./',
+            '/B\./',
+            '/C\./',
+            '/D\./',
+        ];
+        $content = preg_replace($patterns, '', $content);
+
+        if (Str::contains($content, '$')) {
+            $matches = [];
+            preg_match_all('/\$(.*?)\$/', $content, $matches);
+            if (count($matches) > 0) {
+                for ($i = 0; $i < count($matches[0]); $i++) {
+                    $res = Http::post(env('PRACTICE_SERVER_URL'), ['tex' => $matches[1][$i]]);
+                    $content = str_replace($matches[0][$i], str_replace('display="block"', '', $res->json()['result']), $content);
+                }
             }
         }
-        return $defaultName;
+        $content = trim(trim($content), '.');
+        return "<h1>&nbsp;</h1><p>{$content}</p>";
     }
 
     private function getUrl(string $endpoint): string

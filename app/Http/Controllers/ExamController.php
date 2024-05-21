@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\MathpixHelper;
 use App\Http\Requests\ExamRequest;
 use App\Http\Resources\ExamDetailResource;
 use App\Http\Resources\ExamResource;
+use App\Models\Question;
 use App\Repositories\ExamRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ExamController extends Controller
 {
-    public function __construct(ExamRepository $repository)
+    private $mathpixHelper;
+    public function __construct(ExamRepository $repository, MathpixHelper $mathpixHelper)
     {
         $this->repository = $repository;
+        $this->mathpixHelper = $mathpixHelper;
     }
     /**
      * Display a listing of the resource.
@@ -30,7 +35,25 @@ class ExamController extends Controller
      */
     public function store(ExamRequest $request)
     {
-        $this->repository->create(array_merge($request->validated(), ['user_id' => auth()->id()]));
+        $exam = $this->repository->create(array_merge($request->validated(), ['user_id' => auth()->id()]));
+        $pdfId = '2024_05_21_71213a69eeeabc6dddfeg';
+        $questions = $this->mathpixHelper->getPdfLinesData($pdfId);
+        collect($questions)->each(function ($question) use ($exam) {
+            DB::transaction(function () use ($question, $exam) {
+                $q = $exam->questions()->create([
+                    'content' => $question->content,
+                    'user_id' => auth()->id(),
+                    'assignable_type' => Question::TYPE_EXAM,
+                    'assignable_id' => $exam->id,
+                ]);
+                collect($question->choices)->each(function ($choice) use ($q) {
+                    $q->choices()->create([
+                        'content' => $choice['content'],
+                        'is_correct' => $choice['is_correct']
+                    ]);
+                });
+            });
+        });
         return $this->createdSuccess();
     }
 
