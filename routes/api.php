@@ -43,6 +43,8 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
 
     Route::prefix('payment')->group(function () {
         Route::post('create-link', [PaymentController::class, 'createPaymentLink'])->name('payment.create-link');
+        Route::post('cancel', [PaymentController::class, 'cancelPayment'])->name('payment.cancel');
+        Route::post('return', [PaymentController::class, 'returnPayment'])->name('payment.return');
     });
 
     Route::prefix('user')->group(function () {

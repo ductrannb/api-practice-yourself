@@ -10,8 +10,8 @@ use PayOS\PayOS;
 
 class PayOSHelper
 {
-    public const DEFAULT_RETURN_ENDPOINT = 'api/payos/return';
-    public const DEFAULT_CANCEL_ENDPOINT = 'api/payos/cancel';
+    public const DEFAULT_RETURN_ENDPOINT = 'payos/return';
+    public const DEFAULT_CANCEL_ENDPOINT = 'payos/cancel';
 
     private $payOS;
 
@@ -77,7 +77,6 @@ class PayOSHelper
 
     public function getUrl(string $default, $returnEndpoint = null)
     {
-        return 'https://api.ductran.site/api/hello';
-        return trim(env('APP_URL'), '/') . '/' . trim(($returnEndpoint ?: $default), '/');
+        return trim(env('APP_FE_URL'), '/') . '/' . trim(($returnEndpoint ?: $default), '/');
     }
 }
