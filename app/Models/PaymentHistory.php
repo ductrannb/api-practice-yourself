@@ -19,4 +19,9 @@ class PaymentHistory extends BaseModel
     protected $casts = [
         'transactions' => 'array'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

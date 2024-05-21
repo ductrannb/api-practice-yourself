@@ -26,6 +26,7 @@ class PaymentController extends Controller
         $response = $this->payOSHelper->createPaymentLink($request->amount, $request->type);
         $info = $this->payOSHelper->getPaymentLinkInformation($response['orderCode']);
         PaymentHistory::create([
+            'user_id' => auth()->id(),
             'order_code' => $info['orderCode'],
             'amount' => $info['amount'],
             'status' => $info['status'],
@@ -90,7 +91,7 @@ class PaymentController extends Controller
                     'status' => PaymentHistory::STATUS_PAID,
                 ]);
                 if ($oldStatus != PaymentHistory::STATUS_PAID) {
-                    auth()->user()->update([
+                    $transaction->user->update([
                         'balance' => auth()->user()->balance + $data['amount'],
                     ]);
                     info('Payment callback: ' . $data['orderCode'] . ' -> ' . $data['amount']);
