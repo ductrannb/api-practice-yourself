@@ -81,24 +81,26 @@ class PaymentController extends Controller
 
     public function callback(Request $request)
     {
-        DB::transaction(function() use ($request) {
-            if ($request->success) {
-                $data = $request->data;
-                $this->payOSHelper->verifyWebhook($request->all());
-                $transaction = PaymentHistory::where('order_code', $data['orderCode'])->first();
-                $oldStatus = $transaction->status;
-                $transaction->update([
-                    'status' => PaymentHistory::STATUS_PAID,
-                ]);
-                if ($oldStatus != PaymentHistory::STATUS_PAID) {
-                    $transaction->user->update([
-                        'balance' => auth()->user()->balance + $data['amount'],
-                    ]);
-                    info('Payment callback: ' . $data['orderCode'] . ' -> ' . $data['amount']);
-                }
-                info('Payment callback success');
-            }
-        });
+//        Callback from PayOS: Pending
+
+//        DB::transaction(function() use ($request) {
+//            if ($request->success) {
+//                $data = $request->data;
+//                $this->payOSHelper->verifyWebhook($request->all());
+//                $transaction = PaymentHistory::where('order_code', $data['orderCode'])->first();
+//                $oldStatus = $transaction->status;
+//                $transaction->update([
+//                    'status' => PaymentHistory::STATUS_PAID,
+//                ]);
+//                if ($oldStatus != PaymentHistory::STATUS_PAID) {
+//                    $transaction->user->update([
+//                        'balance' => auth()->user()->balance + $data['amount'],
+//                    ]);
+//                    info('Payment callback: ' . $data['orderCode'] . ' -> ' . $data['amount']);
+//                }
+//                info('Payment callback success');
+//            }
+//        });
         return $this->responseOk('Success');
     }
 }
