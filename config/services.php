@@ -35,4 +35,9 @@ return [
         'key' => env('GEMINI_API_KEY'),
     ],
 
+    'mathpix' => [
+        'app_id' => env('MATHPIX_APP_ID'),
+        'app_key' => env('MATHPIX_APP_KEY'),
+    ],
+
 ];

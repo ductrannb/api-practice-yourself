@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\MathpixHelper;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
@@ -96,6 +97,9 @@ Route::middleware(['teacher'])->group(function () {
     });
     Route::prefix('exams')->group(function () {
         Route::get('get-name/{id}', [ExamController::class, 'getName'])->name('exams.get-name');
+    });
+    Route::prefix('mathpix')->group(function () {
+        Route::get('pdf-lines/{pdfId}', [MathpixHelper::class, 'getPdfLinesData'])->name('mathpix.pdf-lines');
     });
     Route::apiResources([
         'lessons' => LessonController::class,
