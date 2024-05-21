@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
@@ -52,6 +53,9 @@ class Handler extends ExceptionHandler
             }
             if ($e->getPrevious() instanceof RecordsNotFoundException) {
                 return response()->json(['message' => 'Record not found'], Response::HTTP_NOT_ACCEPTABLE);
+            }
+            if (Str::endsWith($e->getFile(), 'PayOS.php')) {
+                return response()->json(['message' => 'Hệ thống xử lý thanh toán đang bảo trì. Vui lòng thử lại sau'], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
             info($e);
             return response()->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
