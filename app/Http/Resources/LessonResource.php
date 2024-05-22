@@ -20,6 +20,8 @@ class LessonResource extends JsonResource
             'author' => new AuthorResource($this->author),
             'count_question' => $this->questions->count() ?? 0,
             'completion' => $this->completion ?? 0,
+            'course' => new CourseResource($this->course),
+            'questions' => QuestionResource::collection($this->questions)
         ];
     }
 }

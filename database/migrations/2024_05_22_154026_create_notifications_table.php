@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mathpix_histories', function (Blueprint $table) {
-            $table->id();
-            $table->string('pdf_id');
-            $table->string('status');
-            $table->string('import_status');
-            $table->unsignedInteger('num_pages')->default(0);
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mathpix_histories');
+        Schema::dropIfExists('notifications');
     }
 };

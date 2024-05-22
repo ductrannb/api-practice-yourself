@@ -166,4 +166,9 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
+
+    public function notifications()
+    {
+        return $this->responseOk(data: auth()->user()->notifications);
+    }
 }

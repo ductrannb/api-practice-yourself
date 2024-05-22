@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\QuestionRequest;
 use App\Http\Resources\QuestionResource;
+use App\Models\Question;
 use App\Repositories\QuestionChoiceRepository;
 use App\Repositories\QuestionRepository;
 use App\Utils\Messages;
@@ -91,5 +92,18 @@ class QuestionController extends Controller
             $this->repository->delete($id);
         });
         return $this->responseOk(Messages::DELETE_SUCCESS_MESSAGE);
+    }
+
+    public function quicklyUpdate(Request $request)
+    {
+        if ($request->mode == Question::QUICKLY_MODE_CHOICE) {
+            $choice = $this->questionChoiceRepository->find($request->choice_id, ['question']);
+            $choice->question->correctChoices()->update(['is_correct' => false]);
+            $choice->update(['is_correct' => true]);
+            return $this->responseOk($request->notification ? Messages::UPDATE_SUCCESS_MESSAGE : '');
+        } else if ($request->mode == Question::QUICKLY_MODE_LEVEL) {
+            $this->repository->update($request->question_id, ['level' => $request->level]);
+            return $this->responseOk($request->notification ? Messages::UPDATE_SUCCESS_MESSAGE : '');
+        }
     }
 }

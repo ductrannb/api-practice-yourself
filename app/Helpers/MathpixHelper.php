@@ -7,11 +7,11 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class MathpixHelper
 {
-    private Http $http;
     private const MATHPIX_API_URL = 'https://api.mathpix.com/v3/pdf/';
     private const ADDING_QUESTION = 1;
     private const ADDING_CHOICE_FIRST = 2;
@@ -25,7 +25,19 @@ class MathpixHelper
         return $this->processData($response->json()['pages']);
     }
 
-    public function processData(array $pages): array
+    public function isProcessingDone($pdfId): bool
+    {
+        $response = $this->get("{$pdfId}");
+        return ($response->json()['percent_done'] ?? 0) == 100;
+    }
+
+    public function getNumPages($pdfId): int
+    {
+        $response = $this->get("{$pdfId}");
+        return $response->json()['num_pages'] ?? 0;
+    }
+
+    private function processData(array $pages): array
     {
         // Gộp các dòng văn bản từ các trang thành một mảng
         $lines = [];
@@ -83,19 +95,20 @@ class MathpixHelper
 
     private function addQuestion(QuestionInformation $questionInstance, &$questions)
     {
-        $questionInstance->content = $this->handleData($questionInstance->content);
-        $questionInstance->choices[0]['content'] = $this->handleData($questionInstance->choices[0]['content']);
-        $questionInstance->choices[1]['content'] = $this->handleData($questionInstance->choices[1]['content']);
-        $questionInstance->choices[2]['content'] = $this->handleData($questionInstance->choices[2]['content']);
-        $questionInstance->choices[3]['content'] = $this->handleData($questionInstance->choices[3]['content']);
+        $questionInstance->content = $this->processContent($questionInstance->content);
+        $questionInstance->choices[0]['content'] = $this->processContent($questionInstance->choices[0]['content']);
+        $questionInstance->choices[1]['content'] = $this->processContent($questionInstance->choices[1]['content']);
+        $questionInstance->choices[2]['content'] = $this->processContent($questionInstance->choices[2]['content']);
+        $questionInstance->choices[3]['content'] = $this->processContent($questionInstance->choices[3]['content']);
         $questions[] = $questionInstance;
     }
 
-    private function handleData($content)
+    private function processContent($content)
     {
         // remove question | choice number
         $patterns = [
             '/Câu \d+: /',
+            '/Câu \d+. /',
             '/A\./',
             '/B\./',
             '/C\./',
@@ -119,7 +132,7 @@ class MathpixHelper
 
     private function getUrl(string $endpoint): string
     {
-        return self::MATHPIX_API_URL . trim($endpoint, '/');
+        return trim(self::MATHPIX_API_URL . trim($endpoint, '/'), '/');
     }
 
     private function get(string $endpoint, array|null|string $query = null): PromiseInterface|Response
@@ -128,18 +141,18 @@ class MathpixHelper
         return $this->getHttp()->get($url, $query);
     }
 
-    private function post(string $endpoint, array $data = []): PromiseInterface|Response
+    private function post(string $endpoint, array $data = [], $isFormData = false): PromiseInterface|Response
     {
         $url = $this->getUrl($endpoint);
-        return $this->getHttp()->post($url, $data);
+        return $this->getHttp($isFormData)->post($url, $data);
     }
 
-    private function getHttp(): PendingRequest
+    private function getHttp($isFormData = false): PendingRequest
     {
         return Http::withHeaders([
             'app_id' => config('services.mathpix.app_id'),
             'app_key' => config('services.mathpix.app_key'),
-            'Content-type' => 'application/json',
+            'Content-type' => $isFormData ? 'multipart/form-data' : 'application/json',
         ]);
     }
 }
