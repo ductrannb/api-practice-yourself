@@ -21,12 +21,12 @@ trait Uploader
 
     public function uploadFile(UploadFileRequest $request)
     {
-        if (!$request->hasFile('file')) {
+        if (!$request->file) {
             return response()->json(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
         }
-        $file = $request->file('file');
+        $file = $request->file;
         if (app()->isLocal()) {
-            $response = Http::withHeader('api-practice-key', env('PRACTICE_API_KEY'))->post('https://dev-api.ductran.site/api/upload-file', [
+            $response = Http::withHeader('api-practice-key', env('PRACTICE_API_KEY'))->post('https://api-dev.ductran.site/api/upload-file', [
                 'file' => $file
             ]);
             if ($response->failed()) {
