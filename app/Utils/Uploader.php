@@ -2,7 +2,6 @@
 
 namespace App\Utils;
 
-use App\Http\Requests\UploadFileRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -19,12 +18,8 @@ trait Uploader
         return $url;
     }
 
-    public function uploadFile(UploadFileRequest $request)
+    public function uploadFile($file)
     {
-        if (!$request->hasFile('file')) {
-            return response()->json(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
-        }
-        $file = $request->file('file');
         if (app()->isLocal()) {
             $response = Http::withHeader('api-practice-key', env('PRACTICE_API_KEY'))->post('https://dev-api.ductran.site/api/upload-file', [
                 'file' => $file
@@ -34,9 +29,7 @@ trait Uploader
             }
             return $response->json()['url'];
         }
-        if ($request->header('api-practice-key') != env('PRACTICE_API_KEY')) {
-            return response()->json(['message' => 'You do not have access'], Response::HTTP_FORBIDDEN);
-        }
+
         $path = $this->storeFile($file);
         return response()->json([ 'url' => Storage::url($path)]);
     }
