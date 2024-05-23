@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use App\Helpers\MathpixHelper;
+use App\Helpers\PusherHelper;
 use App\Models\Exam;
 use App\Models\Lesson;
 use App\Models\MathpixHistory;
 use App\Models\Question;
 use App\Models\User;
 use App\Notifications\ImportQuestionsDone;
+use App\Utils\Constants;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -75,6 +77,13 @@ class ImportQuestionsJob implements ShouldQueue
         ]);
         $user = User::find($this->authId);
         $user->notify(new ImportQuestionsDone($this->record, $this->type));
+        $pusherHelper = new PusherHelper(Constants::CHANNEL_IMPORT_QUESTION, Constants::EVENT_IMPORT_QUESTION_DONE);
+        $pusherHelper->sendEvent([
+            'id' => $this->record->id,
+            'name' => $this->record->name,
+            'type' => $this->type,
+            'parent_id' => $this->type == self::TYPE_EXAM ? null : $this->record->course_id,
+        ]);
         info('Create questions done: ' . $pdfId);
     }
 

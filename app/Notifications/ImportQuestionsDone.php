@@ -41,6 +41,7 @@ class ImportQuestionsDone extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'id' => $this->record->id ?? null,
             'name' => $this->record->name ?? null,
             'type' => $this->type,
         ];

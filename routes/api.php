@@ -118,12 +118,6 @@ Route::middleware(['teacher'])->group(function () {
 });
 
 Route::get('hello', function () {
-//    event(new \App\Events\NotificationImportQuestion('hello world'));
-    $pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), [
-        'cluster' => env('PUSHER_APP_CLUSTER'),
-        'useTLS' => true,
-    ]);
-    $pusher->trigger('my-channel', 'my-event', ['message' => 'Hello world']);
     return response()->json(['message' => 'Hello world']);
 });
 Route::get('', function () {

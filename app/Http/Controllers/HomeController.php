@@ -54,7 +54,11 @@ class HomeController extends Controller
 
     public function courseDetail($id)
     {
-        $course = $this->courseRepository->find($id, ['lessons', 'lessons.questions', 'users', 'questions', 'lessons.questionsSelected']);
+        $course = $this->courseRepository->find($id, [
+            'lessons.course', 'lessons.questions.choices', 'lessons.questions.correctChoices', 'lessons.questions.author', 'lessons.questionsSelected',
+            'users',
+            'questions'
+        ]);
         $course->lessons->map(function ($lesson) {
             $lesson->completion = $lesson->questionsSelected->count() ?? 0;
             return $lesson;
