@@ -6,6 +6,9 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class Question extends BaseModel
 {
+    const QUICKLY_MODE_CHOICE = 1;
+    const QUICKLY_MODE_LEVEL = 2;
+
     const LEVEL_EASY = 1;
     const LEVEL_MEDIUM = 2;
     const LEVEL_HARD = 3;

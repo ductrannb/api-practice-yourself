@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\MathpixHelper;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
 use App\Utils\Uploader;
 use Illuminate\Support\Facades\Route;
+use Pusher\Pusher;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('login/google', [AuthController::class, 'loginGoogle'])->name('login-google');
@@ -42,6 +44,7 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('auth-logout');
     Route::post('refresh', [AuthController::class, 'refresh'])->name('auth-refresh-token');
     Route::get('me', [AuthController::class, 'me'])->name('auth-me');
+    Route::get('notifications', [AuthController::class, 'notifications'])->name('auth-me');
     Route::post('change-password', [AuthController::class, 'changePassword'])->name('auth-change-password');
 
     Route::prefix('payment')->group(function () {
@@ -94,10 +97,19 @@ Route::middleware(['teacher'])->group(function () {
     });
     Route::prefix('lessons')->group(function () {
         Route::get('get-name/{id}', [LessonController::class, 'getName'])->name('lessons.get-name');
+        Route::post('import', [LessonController::class, 'import'])->name('lessons.import');
     });
     Route::prefix('exams')->group(function () {
         Route::get('get-name/{id}', [ExamController::class, 'getName'])->name('exams.get-name');
     });
+    Route::prefix('mathpix')->group(function () {
+        Route::get('pdf-lines/{pdfId}', [MathpixHelper::class, 'getPdfLinesData'])->name('mathpix.pdf-lines');
+    });
+
+    Route::prefix('questions')->group(function () {
+        Route::post('quickly-update', [QuestionController::class, 'quicklyUpdate'])->name('questions.quickly-update');
+    });
+
     Route::apiResources([
         'lessons' => LessonController::class,
         'questions' => QuestionController::class,

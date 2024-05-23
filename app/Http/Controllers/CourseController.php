@@ -58,7 +58,11 @@ class CourseController extends Controller
      */
     public function show(Request $request, string $id)
     {
-        $course = $this->repository->find($id, ['teachers', 'lessons', 'lessons.author']);
+        $course = $this->repository->find($id, [
+            'teachers', 'lessons.course',
+            'lessons', 'lessons.author', 'lessons.questions.correctChoices',
+            'lessons.questions.choices', 'lessons.questions.author'
+        ]);
         $data = (new CourseResource($course))->toResponse(app('request'))->getData();
 
         // Search with collection

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Gemini\GeminiService;
+use App\Http\Requests\LessonImportQuestionRequest;
 use App\Http\Requests\LessonRequest;
 use App\Http\Requests\SelectChoiceRequest;
 use App\Http\Resources\GeminiChatResource;
 use App\Http\Resources\LessonResource;
 use App\Http\Resources\QuestionChoiceSelectedResource;
+use App\Jobs\ImportQuestionsJob;
 use App\Models\CourseUser;
 use App\Models\Lesson;
 use App\Models\Question;
@@ -52,11 +54,17 @@ class LessonController extends Controller
      */
     public function show(string $id)
     {
-        $lesson = $this->repository->find($id);
+        $lesson = $this->repository->find($id, ['course', 'questions.correctChoices', 'questions.choices', 'questions.author', 'author']);
+        $lesson->questions = $lesson->questions()->paginate(30);
         if (!$this->isAssigned($lesson->course_id)) {
             throw new RecordsNotFoundException();
         }
-        return $this->responseOk(data: new LessonResource($lesson));
+        return response()->json([
+            'data' => new LessonResource($lesson),
+            'total' => $lesson->questions->total(),
+            'current_page' => $lesson->questions->currentPage(),
+            'last_page' => $lesson->questions->lastPage(),
+        ]);
     }
 
     /**
@@ -135,5 +143,15 @@ class LessonController extends Controller
             return true;
         }
         return (bool)CourseUser::where(['user_id' => auth()->id(), 'course_id' => $course_id])->first();
+    }
+
+    public function import(LessonImportQuestionRequest $request)
+    {
+        $lesson = Lesson::findOrFail($request->lesson_id);
+        if (!$this->isAssigned($lesson->course_id)) {
+            throw new RecordsNotFoundException();
+        }
+        dispatch(new ImportQuestionsJob($lesson, $request->pdf_id, ImportQuestionsJob::TYPE_LESSON, auth()->id()));
+        return $this->responseOk(Messages::IMPORT_QUESTION_MESSAGE);
     }
 }

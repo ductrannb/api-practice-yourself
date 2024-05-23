@@ -26,4 +26,7 @@ class Messages
 
     const EXAM_IS_EMPTY = 'Bài thi thử không có câu hỏi nào.';
     const EXAM_SUBMIT_SUCCESS = 'Nộp bài thi thử thành công.';
+
+    const CREATE_AND_IMPORT_QUESTION_MESSAGE = 'Tạo thành công. Dữ liệu câu hỏi đang được xử lý.';
+    const IMPORT_QUESTION_MESSAGE = 'Dữ liệu câu hỏi đang được xử lý.';
 }

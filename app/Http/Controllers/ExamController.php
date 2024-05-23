@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\MathpixHelper;
 use App\Http\Requests\ExamRequest;
+use App\Http\Requests\UploadFileRequest;
 use App\Http\Resources\ExamDetailResource;
 use App\Http\Resources\ExamResource;
+use App\Jobs\ImportQuestionsJob;
+use App\Models\Question;
 use App\Repositories\ExamRepository;
+use App\Utils\Messages;
+use App\Utils\Uploader;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class ExamController extends Controller
 {
-    public function __construct(ExamRepository $repository)
+    use Uploader;
+
+    private $mathpixHelper;
+    public function __construct(ExamRepository $repository, MathpixHelper $mathpixHelper)
     {
         $this->repository = $repository;
+        $this->mathpixHelper = $mathpixHelper;
     }
     /**
      * Display a listing of the resource.
@@ -30,7 +42,11 @@ class ExamController extends Controller
      */
     public function store(ExamRequest $request)
     {
-        $this->repository->create(array_merge($request->validated(), ['user_id' => auth()->id()]));
+        $exam = $this->repository->create(array_merge($request->validated(), ['user_id' => auth()->id()]));
+        if ($request->has('pdf_id')) {
+            dispatch(new ImportQuestionsJob($exam, $request->pdf_id, ImportQuestionsJob::TYPE_EXAM, auth()->id()));
+            return $this->responseOk(Messages::CREATE_AND_IMPORT_QUESTION_MESSAGE);
+        }
         return $this->createdSuccess();
     }
 
@@ -39,7 +55,7 @@ class ExamController extends Controller
      */
     public function show(string $id)
     {
-        return $this->responseOk(data: new ExamDetailResource($this->repository->find($id, ['questions', 'author'])));
+        return $this->responseOk(data: new ExamDetailResource($this->repository->find($id, ['questions.correctChoices', 'questions.choices', 'questions.author', 'author'])));
     }
 
     /**
