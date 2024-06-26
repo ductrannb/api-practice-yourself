@@ -85,7 +85,7 @@ class AuthController extends Controller
 
     public function sendOtp(SendOtpRequest $request)
     {
-        $user = $this->userRepository->firstOfWhere(['email' => $request->email]);
+        $user = $this->userRepository->firstOfWhereNotFail(['email' => $request->email]);
         $otp = rand(100000, 999999);
         if (!$user) {
             $user = (object)['email' => $request->email, 'name' => 'bạn'];
