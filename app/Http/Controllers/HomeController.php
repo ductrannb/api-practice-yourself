@@ -94,7 +94,7 @@ class HomeController extends Controller
             return $question;
         });
         $lesson->questionsSelected->map(function ($questionSelected) {
-            $questionSelected->is_correct = $questionSelected->question_choice_id == $questionSelected->question->correctChoices->first()->id ?? false;
+            $questionSelected->is_correct = $questionSelected->question_choice_id == ($questionSelected->question->correctChoices->first()->id ?? null) ?? false;
             return $questionSelected;
         });
         if (!$lesson->course || !$lesson->course->is_bought) {
@@ -133,6 +133,9 @@ class HomeController extends Controller
 
     public function examSubmit(HomeExamRequest $request, $id)
     {
+        if (!$request->selected || !count($request->selected)) {
+            return $this->responseOk('');
+        }
         $exam = Exam::with(['questions'])->findOrFail($id);
         if (!$exam->questions->count()) {
             return $this->responseError(Messages::EXAM_IS_EMPTY, errorCode: Response::HTTP_NOT_ACCEPTABLE);
@@ -157,6 +160,7 @@ class HomeController extends Controller
             $score = (10 / $examUser->exam->questions->count()) * $countCorrect ?? 0;
             $examUser->update(['score' =>  $score, 'count_correct_question' => $countCorrect]);
         });
+        return $this->responseOk(Messages::EXAM_SUBMIT_SUCCESS);
     }
 
     public function userListCourses(Request $request)

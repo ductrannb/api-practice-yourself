@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Utils\Messages;
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class CustomAuth
     public function handle(Request $request, Closure $next): Response
     {
         if (!$request->hasHeader('Authorization')) {
-            return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['message' => Messages::UNAUTHORIZED_MESSAGE], Response::HTTP_UNAUTHORIZED);
         }
         $user = JWTAuth::parseToken()->authenticate();
         return $next($request);

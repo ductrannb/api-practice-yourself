@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use App\Utils\Messages;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ class Admin
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check()) {
-            return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['message' => Messages::UNAUTHORIZED_MESSAGE], Response::HTTP_UNAUTHORIZED);
         }
         if (auth()->user()->role_id !== User::ROLE_ADMIN) {
             return response()->json(['message' => 'You do not have access'], Response::HTTP_FORBIDDEN);

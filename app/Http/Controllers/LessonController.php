@@ -109,7 +109,11 @@ class LessonController extends Controller
         if (!$question || !$question->lesson || !$question->lesson->course || !$courseUser) {
             throw new RecordsNotFoundException();
         }
+        if (!$question->correctChoices->first()) {
+            return $this->responseError(Messages::QUESTION_NOT_HAVE_CORRECT_CHOICE, 422);
+        }
         $data = array_merge($request->validated(), [
+            'user_id' => auth()->id(),
             'assignable_id' => $courseUser->id,
             'assignable_type' => QuestionChoiceSelected::TYPE_COURSE,
             'sub_assignable_id' => $question->lesson->id,

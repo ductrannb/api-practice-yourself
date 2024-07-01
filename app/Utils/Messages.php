@@ -4,7 +4,7 @@ namespace App\Utils;
 
 class Messages
 {
-    const UNAUTHORIZED_MESSAGE = 'Unauthorized';
+    const UNAUTHORIZED_MESSAGE = 'Bạn cần phải đăng nhập trước.';
 
     const OTP_SEND_MESSAGE = 'Mã OTP đã được gửi tới email của bạn.';
     const OTP_INVALID_MESSAGE = 'Mã OTP không chính xác.';
@@ -25,8 +25,9 @@ class Messages
     const REGISTER_COURSE_NOT_EXIST = 'Bạn chưa đăng ký khóa học này.';
 
     const EXAM_IS_EMPTY = 'Bài thi thử không có câu hỏi nào.';
-    const EXAM_SUBMIT_SUCCESS = 'Nộp bài thi thử thành công.';
+    const EXAM_SUBMIT_SUCCESS = 'Nộp bài thành công.';
 
     const CREATE_AND_IMPORT_QUESTION_MESSAGE = 'Tạo thành công. Dữ liệu câu hỏi đang được xử lý.';
     const IMPORT_QUESTION_MESSAGE = 'Dữ liệu câu hỏi đang được xử lý.';
+    const QUESTION_NOT_HAVE_CORRECT_CHOICE = 'Câu hỏi chưa có đáp án đúng.';
 }

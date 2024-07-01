@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Utils\Messages;
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
@@ -33,7 +34,7 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (Throwable $e) {
             if ($e instanceof TokenInvalidException) {
-                return response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+                return response()->json(['message' => Messages::UNAUTHORIZED_MESSAGE], Response::HTTP_UNAUTHORIZED);
             }
             if ($e instanceof TokenExpiredException) {
                 $token = JWTAuth::refresh(JWTAuth::getToken());
