@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\QuestionRequest;
 use App\Http\Resources\QuestionResource;
+use App\Jobs\ImportQuestionsJob;
 use App\Models\Question;
+use App\Repositories\ExamRepository;
+use App\Repositories\LessonRepository;
 use App\Repositories\QuestionChoiceRepository;
 use App\Repositories\QuestionRepository;
 use App\Utils\Messages;
@@ -15,11 +18,21 @@ use Illuminate\Support\Facades\DB;
 class QuestionController extends Controller
 {
     private $questionChoiceRepository;
+    private $lessonRepository;
+    private $examRepository;
+    private const ASSIGNABLE_TYPE_LESSON = 1;
+    private const ASSIGNABLE_TYPE_EXAM = 2;
 
-    public function __construct(QuestionRepository $questionRepository, QuestionChoiceRepository $questionChoiceRepository)
-    {
+    public function __construct(
+        QuestionRepository $questionRepository,
+        QuestionChoiceRepository $questionChoiceRepository,
+        LessonRepository $lessonRepository,
+        ExamRepository $examRepository
+    ) {
         $this->repository = $questionRepository;
         $this->questionChoiceRepository = $questionChoiceRepository;
+        $this->lessonRepository = $lessonRepository;
+        $this->examRepository = $examRepository;
     }
 
     /**
@@ -28,12 +41,28 @@ class QuestionController extends Controller
     public function index(Request $request)
     {
         $questions = $this->repository->getList(
-            $request->assignable_id,
             $request->keyword,
             $request->level,
-            $request->assignable_type
+            $request->learning_module_id,
+            $request->learning_module_type,
+            $request->paginate == null
         );
-        return $this->responsePaginate($questions, QuestionResource::class);
+        if (!$request->paginate) {
+            return $this->responsePaginate($questions, QuestionResource::class);
+        }
+        if (!$request->assignable_id) {
+            return $this->responseOk(data: QuestionResource::collection($questions));
+        }
+        $selected = [];
+        if ($request->assignable_type == self::ASSIGNABLE_TYPE_LESSON) {
+            $lesson = $this->lessonRepository->find($request->assignable_id, ['questions']);
+            $selected = $lesson->questions->pluck('id')->toArray();
+        }
+        if ($request->assignable_type == self::ASSIGNABLE_TYPE_EXAM) {
+            $exam = $this->examRepository->find($request->assignable_id, ['questions']);
+            $selected = $exam->questions->pluck('id')->toArray();
+        }
+        return $this->responseOk(data: QuestionResource::collection($questions), extra: ['selected' => $selected]);
     }
 
     /**
@@ -73,7 +102,7 @@ class QuestionController extends Controller
         $data = $request->validated();
         DB::transaction(function () use ($data, $id) {
             $question = $this->repository->find($id, ['choices']);
-            $this->repository->update($id, Arr::only($data, ['content', 'level', 'solution']));
+            $this->repository->update($id, Arr::only($data, ['content', 'level', 'solution', 'learning_module_id']));
             $question->choices->map(function ($choice, $index) use ($data) {
                 $this->questionChoiceRepository->update($choice->id, $data['choices'][$index]);
             });
@@ -89,6 +118,7 @@ class QuestionController extends Controller
         DB::transaction(function () use ($id) {
             $question = $this->repository->find($id);
             $question->choices()->delete();
+            $question->questionMappings()->forceDelete();
             $this->repository->delete($id);
         });
         return $this->responseOk(Messages::DELETE_SUCCESS_MESSAGE);
@@ -105,5 +135,15 @@ class QuestionController extends Controller
             $this->repository->update($request->question_id, ['level' => $request->level]);
             return $this->responseOk($request->notification ? Messages::UPDATE_SUCCESS_MESSAGE : '');
         }
+    }
+
+    public function import(Request $request)
+    {
+        $data = $request->validate([
+            'pdf_id' => 'required|string',
+            'learning_module_id' => 'required|integer|exists:learning_modules,id',
+        ]);
+        dispatch(new ImportQuestionsJob($request->learning_module_id, $request->pdf_id, auth()->id()));
+        return $this->responseOk(Messages::CREATE_AND_IMPORT_QUESTION_MESSAGE);
     }
 }

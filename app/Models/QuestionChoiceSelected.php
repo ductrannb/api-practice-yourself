@@ -21,6 +21,11 @@ class QuestionChoiceSelected extends BaseModel
         return $this->belongsTo(CourseUser::class, 'assignable_id');
     }
 
+    function lesson()
+    {
+        return $this->belongsTo(Lesson::class, 'sub_assignable_id');
+    }
+
     public function choice()
     {
         return $this->belongsTo(Choice::class);

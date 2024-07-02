@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Gemini\GeminiChat;
+
 class ExamUser extends BaseModel
 {
     public function exam()
@@ -23,5 +25,10 @@ class ExamUser extends BaseModel
     public function getScoreAttribute()
     {
         return round($this->attributes['score'], 2) ?? 0;
+    }
+
+    public function geminiChat()
+    {
+        return $this->belongsTo(GeminiChat::class);
     }
 }

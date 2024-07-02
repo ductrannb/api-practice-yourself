@@ -33,9 +33,14 @@ class Course extends BaseModel
 
     public function questions()
     {
-        return $this->hasManyThrough(Question::class, Lesson::class, 'course_id', 'assignable_id')
-            ->where('assignable_type', Question::TYPE_LESSON)
-            ->latest();
+        return $this->hasManyThrough(
+            Question::class,
+            QuestionMapping::class,
+            'assignable_id',
+            'id',
+            'id',
+            'question_id'
+        )->where('question_mappings.assignable_type', Lesson::class);
     }
 
     public function assigned()

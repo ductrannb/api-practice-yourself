@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Gemini\GeminiService;
 use App\Helpers\MathpixHelper;
 use App\Http\Requests\ExamRequest;
 use App\Http\Requests\UploadFileRequest;
 use App\Http\Resources\ExamDetailResource;
 use App\Http\Resources\ExamResource;
+use App\Http\Resources\GeminiChatResource;
 use App\Jobs\ImportQuestionsJob;
+use App\Models\ExamUser;
 use App\Models\Question;
 use App\Repositories\ExamRepository;
 use App\Utils\Messages;
@@ -43,10 +46,10 @@ class ExamController extends Controller
     public function store(ExamRequest $request)
     {
         $exam = $this->repository->create(array_merge($request->validated(), ['user_id' => auth()->id()]));
-        if ($request->has('pdf_id')) {
-            dispatch(new ImportQuestionsJob($exam, $request->pdf_id, ImportQuestionsJob::TYPE_EXAM, auth()->id()));
-            return $this->responseOk(Messages::CREATE_AND_IMPORT_QUESTION_MESSAGE);
-        }
+//        if ($request->has('pdf_id')) {
+//            dispatch(new ImportQuestionsJob($exam, $request->pdf_id, ImportQuestionsJob::TYPE_EXAM, auth()->id()));
+//            return $this->responseOk(Messages::CREATE_AND_IMPORT_QUESTION_MESSAGE);
+//        }
         return $this->createdSuccess();
     }
 
@@ -80,5 +83,27 @@ class ExamController extends Controller
     {
         $record = $this->repository->find($id);
         return $this->responseOk(data: ['exam_name' => $record->name]);
+    }
+
+    public function attachQuestion(Request $request)
+    {
+        $exam = $this->repository->find($request->exam_id);
+        DB::transaction(function () use ($request, $exam) {
+            $exam->questionMappings()->forceDelete();
+            $exam->questions()->syncWithoutDetaching($request->selected);
+        });
+        return $this->responseOk('Lưu thành công');
+    }
+
+    public function startChat($id)
+    {
+        $examUser = ExamUser::findOrFail($id);
+        $chat = null;
+        DB::transaction(function () use ($examUser, &$chat) {
+            $gemini = new GeminiService();
+            $chat = $gemini->startChat();
+            $examUser->update(['gemini_chat_id' => $chat->getId()]);
+        });
+        return $this->responseOk(data: new GeminiChatResource($chat));
     }
 }

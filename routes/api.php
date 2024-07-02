@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GeminiChatController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LearningModuleController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\QuestionController;
@@ -22,6 +23,7 @@ Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('send-otp', [AuthController::class, 'sendOtp'])->name('send-otp');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('forget-password');
 Route::post('upload-file', [UploadController::class, 'upload'])->name('upload-file');
+Route::get('learning-modules', [LearningModuleController::class, 'index'])->name('learning-modules');
 
 Route::any('payos/callback', [PaymentController::class, 'callback'])->name('payos.callback');
 
@@ -65,13 +67,14 @@ Route::middleware(['auth.custom', 'api'])->group(function () {
         });
         Route::prefix('lessons')->group(function () {
             Route::get('{id}', [HomeController::class, 'lessonDetail'])->name('home.lessons.detail');
-            Route::post('select', [LessonController::class, 'selectChoice'])->name('home.lessons.select');
-            Route::post('start-chat/{id}', [LessonController::class, 'startChat'])->name('home.lessons.select');
+            Route::post('select/{id}', [LessonController::class, 'selectChoice'])->name('home.lessons.select');
+            Route::post('start-chat/{id}', [LessonController::class, 'startChat'])->name('home.lessons.start-chat');
         });
         Route::prefix('exams')->group(function () {
             Route::get('review/{id}', [HomeController::class, 'examReview'])->name('home.exams.review');
             Route::get('{id}', [HomeController::class, 'examDetail'])->name('home.exams.detail');
             Route::post('submit/{id}', [HomeController::class, 'examSubmit'])->name('home.exams.submit');
+            Route::post('start-chat/{id}', [ExamController::class, 'startChat'])->name('home.exams.start-chat');
         });
     });
 
@@ -97,10 +100,12 @@ Route::middleware(['teacher'])->group(function () {
     });
     Route::prefix('lessons')->group(function () {
         Route::get('get-name/{id}', [LessonController::class, 'getName'])->name('lessons.get-name');
-        Route::post('import', [LessonController::class, 'import'])->name('lessons.import');
+//        Route::post('import', [LessonController::class, 'import'])->name('lessons.import');
+        Route::post('attach-questions', [LessonController::class, 'attachQuestion'])->name('lessons.attach-question');
     });
     Route::prefix('exams')->group(function () {
         Route::get('get-name/{id}', [ExamController::class, 'getName'])->name('exams.get-name');
+        Route::post('attach-questions', [ExamController::class, 'attachQuestion'])->name('exams.attach-question');
     });
     Route::prefix('mathpix')->group(function () {
         Route::get('pdf-lines/{pdfId}', [MathpixHelper::class, 'getPdfLinesData'])->name('mathpix.pdf-lines');
@@ -108,6 +113,7 @@ Route::middleware(['teacher'])->group(function () {
 
     Route::prefix('questions')->group(function () {
         Route::post('quickly-update', [QuestionController::class, 'quicklyUpdate'])->name('questions.quickly-update');
+        Route::post('import', [QuestionController::class, 'import'])->name('questions.import');
     });
 
     Route::apiResources([

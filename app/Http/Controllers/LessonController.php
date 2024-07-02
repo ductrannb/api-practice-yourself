@@ -102,13 +102,17 @@ class LessonController extends Controller
         ]);
     }
 
-    public function selectChoice(SelectChoiceRequest $request)
+    public function selectChoice(SelectChoiceRequest $request, $lessonId)
     {
-        $question = Question::with(['lesson.course'])->find($request->question_id);
-        $courseUser = CourseUser::where(['user_id' => auth()->id(), 'course_id' => $question->lesson->course->id])->first();
-        if (!$question || !$question->lesson || !$question->lesson->course || !$courseUser) {
+        $question = Question::find($request->question_id);
+        $lesson = Lesson::with(['course'])->find($lessonId);
+        $courseUser = CourseUser::where(['user_id' => auth()->id(), 'course_id' => $lesson->course->id])->first();
+        // Check question, lesson, course exists or user is subscribed to the course
+        if (!$question || !$lesson || !$lesson->course || !$courseUser) {
             throw new RecordsNotFoundException();
         }
+
+        // Check question has correct choice
         if (!$question->correctChoices->first()) {
             return $this->responseError(Messages::QUESTION_NOT_HAVE_CORRECT_CHOICE, 422);
         }
@@ -116,7 +120,7 @@ class LessonController extends Controller
             'user_id' => auth()->id(),
             'assignable_id' => $courseUser->id,
             'assignable_type' => QuestionChoiceSelected::TYPE_COURSE,
-            'sub_assignable_id' => $question->lesson->id,
+            'sub_assignable_id' => $lesson->id,
         ]);
         $questionChoiceSelected = QuestionChoiceSelected::where(Arr::except($data, 'question_choice_id'))->first();
         if (!$questionChoiceSelected) {
@@ -157,5 +161,15 @@ class LessonController extends Controller
         }
         dispatch(new ImportQuestionsJob($lesson, $request->pdf_id, ImportQuestionsJob::TYPE_LESSON, auth()->id()));
         return $this->responseOk(Messages::IMPORT_QUESTION_MESSAGE);
+    }
+
+    public function attachQuestion(Request $request)
+    {
+        $lesson = $this->repository->find($request->lesson_id);
+        DB::transaction(function () use ($request, $lesson) {
+            $lesson->questionMappings()->forceDelete();
+            $lesson->questions()->syncWithoutDetaching($request->selected);
+        });
+        return $this->responseOk('Lưu thành công');
     }
 }

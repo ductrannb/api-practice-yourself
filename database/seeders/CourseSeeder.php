@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Course;
+use App\Models\CourseUser;
 use App\Models\Lesson;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -59,7 +60,10 @@ class CourseSeeder extends Seeder
         ];
 
         foreach ($data as $item) {
-            Course::create($item);
+            $course = Course::create($item);
+            $course->teachers()->attach(2, [
+                'type' => CourseUser::TYPE_TEACHER,
+            ]);
         }
 
         $course = Course::find(8);

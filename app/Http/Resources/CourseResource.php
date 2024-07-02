@@ -22,7 +22,9 @@ class CourseResource extends JsonResource
             'image' => $this->image_url,
             'sold' => $this->sold,
             'count_lesson' => $this->lessons->count(),
-            'count_question' => $this->questions->count(),
+            'count_question' => $this->lessons->sum(function ($lesson) {
+                return $lesson->questions->count();
+            }),
             'teachers' => UserResource::collection($this->teachers),
             'description' => $this->description,
             'created_at' => $this->created_at

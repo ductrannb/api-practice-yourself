@@ -16,7 +16,12 @@ class Exam extends BaseModel
 
     public function questions()
     {
-        return $this->hasMany(Question::class, 'assignable_id')
-            ->where('assignable_type', Question::TYPE_EXAM);
+        return $this->morphToMany(Question::class, 'assignable', 'question_mappings');
+    }
+
+    public function questionMappings()
+    {
+        return $this->hasMany(QuestionMapping::class, 'assignable_id')
+            ->where('question_mappings.assignable_type', Exam::class);
     }
 }

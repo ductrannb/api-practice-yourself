@@ -22,9 +22,15 @@ class QuestionResource extends JsonResource
             'correct_choice' => new QuestionChoiceResource($this->correctChoices->first()) ?? null,
             'solution' => $this->solution ?: '',
             'author' => new AuthorResource($this->author),
-            'assignable_id' => $this->assignable_id,
-            'assignable_type' => $this->assignable_type,
-            'is_selected' => $this->is_selected ?? false
+            'is_selected' => $this->is_selected ?? false,
+            'class' => $this->unit->parent->parent->name ?? null,
+            'class_id' => $this->unit->parent->parent->id ?? null,
+            'chapter_id' => $this->unit->parent->id ?? null,
+            'chapter' => $this->unit->parent->name ?? null,
+            'unit_id' => $this->unit->id ?? null,
+            'unit' => $this->unit->name ?? null,
+            'usage_count' => $this->usage_count ?? 0,
+            'learning_module_id' => $this->learning_module_id,
         ];
     }
 }

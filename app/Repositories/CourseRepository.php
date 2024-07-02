@@ -30,7 +30,7 @@ class CourseRepository extends BaseRepository
             })
             ->latest()
             ->orderByDesc('id')
-            ->with(['teachers'])
+            ->with(['teachers', 'lessons.questions'])
             ->paginate($perPage);
     }
 }

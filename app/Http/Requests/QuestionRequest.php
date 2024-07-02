@@ -11,20 +11,15 @@ class QuestionRequest extends BaseRequest
 {
     public function rules(): array
     {
-        $rules = [
+        return [
             'content' => 'required|string',
             'choices' => 'required|array|min:4|max:4',
             'choices.*.content' => 'required|string',
             'choices.*.is_correct' => 'required|boolean',
             'level' => ['required', Rule::in([Question::LEVEL_EASY, Question::LEVEL_MEDIUM, Question::LEVEL_HARD])],
-            'assignable_id' => 'required|integer',
-            'assignable_type' => ['required', Rule::in([Question::TYPE_LESSON, Question::TYPE_EXAM])],
             'solution' => 'nullable|string',
+            'learning_module_id' => 'required|exists:learning_modules,id'
         ];
-        if (!$this->isMethod('post')) {
-            return Arr::except($rules, ['assignable_id']);
-        }
-        return $rules;
     }
 
     public function attributes(): array

@@ -11,13 +11,18 @@ class Lesson extends BaseModel
 
     public function questions()
     {
-        return $this->hasMany(Question::class, 'assignable_id')->where('assignable_type', Question::TYPE_LESSON);
+        return $this->morphToMany(Question::class, 'assignable', 'question_mappings');
+    }
+
+    public function questionMappings()
+    {
+        return $this->hasMany(QuestionMapping::class, 'assignable_id')
+            ->where('question_mappings.assignable_type', Lesson::class);
     }
 
     public function questionsSelected()
     {
-        return $this->hasManyThrough(QuestionChoiceSelected::class, Question::class, 'assignable_id', 'question_id')
-            ->where('question_choice_selected.assignable_type', QuestionChoiceSelected::TYPE_COURSE)
+        return $this->hasMany(QuestionChoiceSelected::class, 'sub_assignable_id')
             ->whereHas('courseUser', function ($query) {
                 return $query->where('user_id', auth()->id());
             });

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CourseSeeder::class,
             ExamSeeder::class,
+            LearningModuleSeeder::class,
 //            QuestionSeeder::class,
         ]);
     }

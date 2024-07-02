@@ -22,6 +22,7 @@ class HomeExamReviewResource extends JsonResource
             'score' => $this->score,
             'questions' => QuestionResource::collection($this->exam->questions),
             'selected' => QuestionChoiceSelectedResource::collection($this->selected),
+            'chat_session' => $this->geminiChat->id ?? null,
         ];
     }
 }

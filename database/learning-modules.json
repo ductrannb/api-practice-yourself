@@ -1,0 +1,190 @@
+[
+  {
+    "name": "Lớp 10",
+    "chapters": [
+      {
+        "name": "Chương 1: Mệnh đề và tập hợp",
+        "units": [
+          "Bài 1: Mệnh đề",
+          "Bài 2: Tập hợp",
+          "Bài 3: Các phép toán trên tập hợp"
+        ]
+      },
+      {
+        "name": "Chương 2: Hàm số bậc nhất và bậc hai",
+        "units": [
+          "Bài 4: Hàm số bậc nhất",
+          "Bài 5: Hàm số bậc hai"
+        ]
+      },
+      {
+        "name": "Chương 3: Phương trình, hệ phương trình",
+        "units": [
+          "Bài 6: Phương trình, hệ phương trình bậc nhất hai ẩn",
+          "Bài 7: Phương trình và hệ phương trình bậc hai"
+        ]
+      },
+      {
+        "name": "Chương 4: Bất đẳng thức, bất phương trình",
+        "units": [
+          "Bài 8: Bất đẳng thức",
+          "Bài 9: Bất phương trình và hệ bất phương trình bậc nhất hai ẩn"
+        ]
+      },
+      {
+        "name": "Chương 5: Thống kê",
+        "units": [
+          "Bài 10: Một số khái niệm cơ bản về thống kê",
+          "Bài 11: Các số đặc trưng đo xu thế trung tâm cho mẫu số liệu không ghép nhóm",
+          "Bài 12: Các số đặc trưng đo mức độ phân tán cho mẫu số liệu không ghép nhóm"
+        ]
+      },
+      {
+        "name": "Chương 6: Góc lượng giác. Công thức lượng giác",
+        "units": [
+          "Bài 13: Góc lượng giác",
+          "Bài 14: Giá trị lượng giác của một góc lượng giác. Đường tròn lượng giác",
+          "Bài 15: Công thức lượng giác"
+        ]
+      },
+      {
+        "name": "Chương 7: Vectơ",
+        "units": [
+          "Bài 16: Vectơ và các phép toán trên vectơ",
+          "Bài 17: Tích vô hướng của hai vectơ"
+        ]
+      },
+      {
+        "name": "Chương 8: Đường thẳng trong mặt phẳng tọa độ",
+        "units": [
+          "Bài 18: Phương trình đường thẳng",
+          "Bài 19: Vị trí tương đối giữa hai đường thẳng",
+          "Bài 20: Góc giữa hai đường thẳng"
+        ]
+      },
+      {
+        "name": "Chương 9: Đường tròn trong mặt phẳng tọa độ",
+        "units": [
+          "Bài 21: Phương trình đường tròn",
+          "Bài 22: Vị trí tương đối giữa đường thẳng và đường tròn",
+          "Bài 23: Vị trí tương đối giữa hai đường tròn"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Lớp 11",
+    "chapters": [
+      {
+        "name": "Chương 1: Hàm số lượng giác và phương trình lượng giác",
+        "units": [
+          "Bài 1: Giá trị lượng giác của một góc lượng giác",
+          "Bài 2: Hàm số lượng giác",
+          "Bài 3: Phương trình lượng giác cơ bản",
+          "Bài 4: Phương trình lượng giác thường gặp"
+        ]
+      },
+      {
+        "name": "Chương 2: Tổ hợp - Xác suất",
+        "units": [
+          "Bài 5: Hoán vị - Chỉnh hợp - Tổ hợp",
+          "Bài 6: Nhị thức Newton",
+          "Bài 7: Xác suất của biến cố",
+          "Bài 8: Các quy tắc tính xác suất"
+        ]
+      },
+      {
+        "name": "Chương 3: Dãy số - Cấp số cộng - Cấp số nhân",
+        "units": [
+          "Bài 9: Dãy số",
+          "Bài 10: Cấp số cộng",
+          "Bài 11: Cấp số nhân"
+        ]
+      },
+      {
+        "name": "Chương 4: Giới hạn",
+        "units": [
+          "Bài 12: Giới hạn của dãy số",
+          "Bài 13: Giới hạn của hàm số",
+          "Bài 14: Hàm số liên tục"
+        ]
+      },
+      {
+        "name": "Chương 5: Đạo hàm",
+        "units": [
+          "Bài 15: Định nghĩa và ý nghĩa của đạo hàm",
+          "Bài 16: Quy tắc tính đạo hàm",
+          "Bài 17: Đạo hàm của hàm số lượng giác",
+          "Bài 18: Vi phân",
+          "Bài 19: Ứng dụng của đạo hàm để khảo sát và vẽ đồ thị hàm số"
+        ]
+      },
+      {
+        "name": "Chương 6: Hình học không gian",
+        "units": [
+          "Bài 20: Quan hệ vuông góc trong không gian",
+          "Bài 21: Quan hệ song song trong không gian",
+          "Bài 22: Các khối đa diện"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Lớp 12",
+    "chapters": [
+      {
+        "name": "Chương 1: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị hàm số",
+        "units": [
+          "Bài 1: Sự đồng biến, nghịch biến của hàm số",
+          "Bài 2: Cực trị của hàm số",
+          "Bài 3: Giá trị lớn nhất và giá trị nhỏ nhất của hàm số",
+          "Bài 4: Đường tiệm cận",
+          "Bài 5: Khảo sát sự biến thiên và vẽ đồ thị hàm số"
+        ]
+      },
+      {
+        "name": "Chương 2: Hàm số lũy thừa, hàm số mũ và hàm số logarit",
+        "units": [
+          "Bài 6: Lũy thừa với số mũ thực",
+          "Bài 7: Hàm số lũy thừa",
+          "Bài 8: Hàm số mũ và hàm số logarit",
+          "Bài 9: Phương trình mũ và phương trình logarit",
+          "Bài 10: Bất phương trình mũ và bất phương trình logarit"
+        ]
+      },
+      {
+        "name": "Chương 3: Nguyên hàm - Tích phân và ứng dụng",
+        "units": [
+          "Bài 11: Nguyên hàm",
+          "Bài 12: Tích phân",
+          "Bài 13: Ứng dụng của tích phân trong hình học"
+        ]
+      },
+      {
+        "name": "Chương 4: Số phức",
+        "units": [
+          "Bài 14: Số phức",
+          "Bài 15: Cộng, trừ và nhân số phức",
+          "Bài 16: Chia số phức",
+          "Bài 17: Phương trình bậc hai với hệ số thực"
+        ]
+      },
+      {
+        "name": "Chương 5: Khối tròn xoay",
+        "units": [
+          "Bài 18: Khái niệm về mặt tròn xoay",
+          "Bài 19: Khối tròn xoay",
+          "Bài 20: Khối nón, khối trụ, khối cầu"
+        ]
+      },
+      {
+        "name": "Chương 6: Phương pháp tọa độ trong không gian",
+        "units": [
+          "Bài 21: Hệ trục tọa độ trong không gian",
+          "Bài 22: Phương trình mặt phẳng",
+          "Bài 23: Phương trình đường thẳng trong không gian"
+        ]
+      }
+    ]
+  }
+]

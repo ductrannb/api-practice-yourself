@@ -4,23 +4,28 @@ namespace App\Gemini;
 
 class GeminiModel
 {
+    public static function gemini15Flash()
+    {
+        return 'gemini-1.5-flash-latest';
+    }
+
     public static function geminiPro()
     {
-        return 'models/gemini-pro';
+        return 'gemini-pro';
     }
 
     public static function geminiProVision()
     {
-        return 'models/gemini-pro-vision';
+        return 'gemini-pro-vision';
     }
 
     public static function embedding()
     {
-        return 'models/embedding-001';
+        return 'embedding-001';
     }
 
     public static function aqa()
     {
-        return 'models/aqa';
+        return 'aqa';
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class GeminiService
 {
-    private const API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:';
+    private const API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/';
     public ChatSession $chat;
 
     public function __construct($chatId = null)
@@ -15,6 +15,11 @@ class GeminiService
         if ($chatId) {
             $this->continueChat($chatId);
         }
+    }
+
+    public function getBaseUrl()
+    {
+        return self::API_BASE_URL . GeminiModel::gemini15Flash() . ':';
     }
 
     public function startChat($chatSession = null): ChatSession
@@ -41,7 +46,7 @@ class GeminiService
     **/
     private function request(string $function, array $data): Response
     {
-        $url = self::API_BASE_URL . $function . '?key=' . config('services.gemini.key');
+        $url = $this->getBaseUrl() . $function . '?key=' . config('services.gemini.key');
         return Http::post($url, $data);
     }
 

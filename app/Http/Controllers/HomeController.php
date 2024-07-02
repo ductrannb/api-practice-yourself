@@ -38,7 +38,7 @@ class HomeController extends Controller
     public function index()
     {
         $newCourses = Course::latest()->orderByDesc('id', 'desc')->take(8)->get();
-        $newExams = Exam::latest()->orderByDesc('id', 'desc')->take(4)->get();
+        $newExams = Exam::with(['questions'])->latest()->orderByDesc('id', 'desc')->take(4)->get();
         $overview = [
             'count_user' => User::where('role_id', User::ROLE_USER)->count(),
             'count_question' => Question::count(),
@@ -57,7 +57,7 @@ class HomeController extends Controller
         $course = $this->courseRepository->find($id, [
             'lessons.course', 'lessons.questions.choices', 'lessons.questions.correctChoices', 'lessons.questions.author', 'lessons.questionsSelected',
             'users',
-            'questions'
+            'questions.unit.parent.parent'
         ]);
         $course->lessons->map(function ($lesson) {
             $lesson->completion = $lesson->questionsSelected->count() ?? 0;
@@ -117,7 +117,7 @@ class HomeController extends Controller
 
     public function examReview($id)
     {
-        $examUser = ExamUser::with(['exam.questions.correctChoices', 'selected.question.correctChoices'])->findOrFail($id);
+        $examUser = ExamUser::with(['exam.questions.correctChoices', 'selected.question.correctChoices', 'geminiChat'])->findOrFail($id);
         $examUser->selected->map(function ($selected) {
             $selected->is_correct = $selected->question_choice_id == $selected->question->correctChoices->first()->id ?? false;
             return $selected;

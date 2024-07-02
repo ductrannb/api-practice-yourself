@@ -45,10 +45,10 @@ class Controller extends BaseController
         );
     }
 
-    public function responseOk($message = '', $data = [])
+    public function responseOk($message = '', $data = [], $extra = [])
     {
         return response()->json(
-            ['message' => $message, 'data' => $data],
+            ['message' => $message, 'data' => $data, 'extra' => $extra],
             Response::HTTP_OK
         );
     }

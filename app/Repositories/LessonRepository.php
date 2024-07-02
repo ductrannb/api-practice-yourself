@@ -22,6 +22,7 @@ class LessonRepository extends BaseRepository
             ->when($keyword != null, function ($query) use ($keyword) {
                 return $query->where('name', 'like', '%' . $keyword . '%');
             })
+            ->with(['questions'])
             ->latest()
             ->orderByDesc('id')
             ->paginate(10);

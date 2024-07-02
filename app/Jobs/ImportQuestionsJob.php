@@ -22,8 +22,7 @@ class ImportQuestionsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $record;
-    private $type;
+    private $learningModuleId;
     private $pdfId;
     private $authId;
     private $mathpixHelper;
@@ -34,11 +33,10 @@ class ImportQuestionsJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(Exam|Lesson $record, $pdfId, $type, $authId)
+    public function __construct($learningModuleId, $pdfId, $authId)
     {
-        $this->record = $record;
+        $this->learningModuleId = $learningModuleId;
         $this->pdfId = $pdfId;
-        $this->type = $type;
         $this->authId = $authId;
         $this->mathpixHelper = new MathpixHelper();
     }
@@ -75,14 +73,12 @@ class ImportQuestionsJob implements ShouldQueue
         $mathpixHistory->update([
             'import_status' => MathpixHistory::STATUS_DONE,
         ]);
-        $user = User::find($this->authId);
-        $user->notify(new ImportQuestionsDone($this->record, $this->type));
+//        $user = User::find($this->authId);
+//        $user->notify(new ImportQuestionsDone($this->record, $this->type));
         $pusherHelper = new PusherHelper(Constants::CHANNEL_IMPORT_QUESTION, Constants::EVENT_IMPORT_QUESTION_DONE);
         $pusherHelper->sendEvent([
-            'id' => $this->record->id,
-            'name' => $this->record->name,
-            'type' => $this->type,
-            'parent_id' => $this->type == self::TYPE_EXAM ? null : $this->record->course_id,
+            'auth' => $this->authId,
+            'status' => 'done',
         ]);
         info('Create questions done: ' . $pdfId);
     }
@@ -92,11 +88,13 @@ class ImportQuestionsJob implements ShouldQueue
         collect($questions)->each(function ($question) {
             DB::beginTransaction();
             try {
-                $q = $this->record->questions()->create([
+                $q = Question::firstOrCreate([
                     'content' => $question->content,
+                ], [
+                    'level' => $question->level ?? 1,
                     'user_id' => $this->authId,
-                    'assignable_type' => $this->type == self::TYPE_EXAM ? Question::TYPE_EXAM : Question::TYPE_LESSON,
-                    'assignable_id' => $this->record->id,
+                    'learning_module_id' => $this->learningModuleId,
+                    'solution' => $question->solution ?? null
                 ]);
                 collect($question->choices)->each(function ($choice) use ($q) {
                     $q->choices()->create([

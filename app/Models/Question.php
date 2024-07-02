@@ -34,4 +34,14 @@ class Question extends BaseModel
     public function author() {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function unit()
+    {
+        return $this->belongsTo(LearningModule::class, 'learning_module_id');
+    }
+
+    public function questionMappings()
+    {
+        return $this->hasMany(QuestionMapping::class, 'question_id');
+    }
 }
