@@ -20,7 +20,9 @@ class ExamResource extends JsonResource
             'time' => $this->time,
             'author' => new AuthorResource($this->author),
             'count_question' => $this->questions->count(),
-            'created_at' => $this->created_at
+            'shuffle_questions' => $this->shuffle_questions,
+            'shuffle_choices' => $this->shuffle_choices,
+            'created_at' => $this->created_at,
         ];
     }
 }

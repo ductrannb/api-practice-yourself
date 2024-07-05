@@ -70,7 +70,7 @@ class CourseSeeder extends Seeder
         Lesson::create([
             'user_id' => 1,
             'course_id' => $course->id,
-            'name' => 'Bài 1: Đường tiệm cận của đồ thị hàm số',
+            'name' => 'Đường tiệm cận của đồ thị hàm số',
         ]);
     }
 }

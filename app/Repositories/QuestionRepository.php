@@ -42,7 +42,7 @@ class QuestionRepository extends BaseRepository
                         return $query->where('learning_module_id', $learningModuleId);
                     });
             })
-            ->with(['choices', 'correctChoices', 'author', 'unit.parent.parent'])
+            ->with(['choices', 'correctChoices', 'author', 'unit.parent.parent', 'questionMappings'])
             ->latest();
         if ($paginate) {
             return $query->paginate(10);

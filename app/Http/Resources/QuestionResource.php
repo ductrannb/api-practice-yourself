@@ -29,7 +29,7 @@ class QuestionResource extends JsonResource
             'chapter' => $this->unit->parent->name ?? null,
             'unit_id' => $this->unit->id ?? null,
             'unit' => $this->unit->name ?? null,
-            'usage_count' => $this->usage_count ?? 0,
+            'usage_count' => $this->questionMappings->count() ?? 0,
             'learning_module_id' => $this->learning_module_id,
         ];
     }

@@ -27,7 +27,8 @@ abstract class BaseRequest extends FormRequest
             'min' => ':Attribute quá ngắn, tối thiểu :min ký tự.',
             'confirmed' => ':Attribute xác nhận không chính xác.',
             'file.max' => ':Attribute quá nặng, tối đa :max KB.',
-            'mimes' => ':Attribute không hợp lệ, định dạng hợp lệ: :values'
+            'mimes' => ':Attribute không hợp lệ, định dạng hợp lệ: :values',
+            'integer' => 'Quá giới hạn.'
         ];
     }
 }

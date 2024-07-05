@@ -11,6 +11,8 @@ class ExamRequest extends FormRequest
         return [
             'name' => 'required|string',
             'time' => 'required|integer|min:0',
+            'shuffle_questions' => 'required|boolean',
+            'shuffle_choices' => 'required|boolean',
         ];
     }
 
@@ -18,7 +20,9 @@ class ExamRequest extends FormRequest
     {
         return [
             'name' => 'tiêu đề',
-            'time' => 'thời gian'
+            'time' => 'thời gian',
+            'shuffle_question' => 'xáo trộn câu hỏi',
+            'shuffle_choices' => 'xáo trộn đáp án',
         ];
     }
 }

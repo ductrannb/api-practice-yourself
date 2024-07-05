@@ -19,7 +19,9 @@ class ExamDetailResource extends JsonResource
             'name' => $this->name,
             'time' => $this->time,
             'author' => new AuthorResource($this->author),
-            'questions' => QuestionResource::collection($this->questions)
+            'questions' => QuestionResource::collection($this->questions),
+            'shuffle_questions' => $this->shuffle_questions,
+            'shuffle_choices' => $this->shuffle_choices,
         ];
     }
 }

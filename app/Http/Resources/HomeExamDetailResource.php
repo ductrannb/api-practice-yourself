@@ -20,6 +20,8 @@ class HomeExamDetailResource extends JsonResource
             'name' => $this->name,
             'time' => $this->time,
             'questions' => HomeExamQuestionResource::collection($this->questions),
+            'shuffle_questions' => $this->shuffle_questions,
+            'shuffle_choices' => $this->shuffle_choices,
         ];
     }
 }
